@@ -9,7 +9,7 @@ export abstract class Handler {
     }
 
     public isSupportedRaw(server: ServerContext, client: ClientContext, request: string): boolean {
-        if (client.state === ClientState.Connected) {
+        if (client.state === ClientState.Connected || client.state == ClientState.Authenticated) {
             return this.isSupported(server, client, XMLReader.fromXML(request));
         }
         return false;

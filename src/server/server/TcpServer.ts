@@ -43,8 +43,7 @@ export class TcpServer extends AbstractServer {
             writeRaw: (res: string) => { this.write(socket, context, res); },
             close: () => this.closeClient(socket),
         };
-        socket.setEncoding('utf8')
-        socket.pipe(socket);
+        //socket.setEncoding('utf8')
         socket.on('data', data => {
             if (this.inputHandler) {
                 this.inputHandler(context, data.toString());

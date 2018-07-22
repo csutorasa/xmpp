@@ -8,7 +8,7 @@ export class OpenStreamHandler extends Handler {
     protected xmlStream = new XMLStream();
 
     public isSupportedRaw(server: ServerContext, client: ClientContext, request: string): boolean {
-        if(client.state !== ClientState.Connecting) {
+        if(client.state !== ClientState.Connecting && client.state !== ClientState.Authenticated) {
             return false;
         }
         const xml = XMLReader.fromOpenXML(request);
@@ -18,9 +18,13 @@ export class OpenStreamHandler extends Handler {
 
     public handleRaw(server: ServerContext, client: ClientContext, request: string): void {
         const xml = XMLReader.fromOpenXML(request);
-        const openStream = this.xmlStream.createOpenStreamMessage(server.hostname, xml.getElement('stream:stream').getAttr('from'), '++TR84Sm6A3hnt3Q065SnAbbk3Y=');
-        client.state = ClientState.Connected;
+        const openStream = this.xmlStream.createOpenStreamMessage(server.hostname, xml.getElement('stream:stream').getAttr('from'));
         client.writeRaw(openStream);
-        client.write(this.xmlStream.createFeaturesMessage());
+        if(client.state === ClientState.Connecting) {
+            client.write(this.xmlStream.createFeaturesMessage(server.features, server.authfeatures));
+            client.state = ClientState.Connected;
+        } else {
+            client.write(this.xmlStream.createFeaturesMessage(server.features));
+        }
     }
 }
