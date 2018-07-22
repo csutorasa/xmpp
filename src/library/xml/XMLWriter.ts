@@ -53,11 +53,11 @@ export class XMLWriter {
         return this;
     }
 
-    public element(name: string, element: XMLWriter): XMLWriter {
+    public element(name: string, ...element: XMLWriter[]): XMLWriter {
         if (!this.elements[name]) {
             this.elements[name] = [];
         }
-        this.elements[name].push(element);
+        this.elements[name].push(...element);
         return this;
     }
 

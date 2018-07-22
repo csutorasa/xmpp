@@ -1,14 +1,17 @@
-import { TcpServer } from "./tcp/TcpServer";
-import { StreamHandler } from "./stream/StreamHandler";
+import { TcpServer } from "./server/TcpServer";
+import { OpenStreamHandler } from "./stream/OpenStreamHandler";
+import { XMPPServer } from "./server/XMPPServer";
+import { CloseStreamHandler } from "./stream/CloseStreamHandler";
+import { TcpsServer } from "./server/TcpsServer";
 
-const server = new TcpServer()
+const server = new XMPPServer()
 
 server
-.addHandler(new StreamHandler())
+    .registerServer(new TcpServer())
+    .registerServer(new TcpsServer())
+    .addHandler(new OpenStreamHandler())
+    .addHandler(new CloseStreamHandler())
 
-//server.start();
-
-import { XMLWriter } from "../library";
-
-console.log(XMLWriter.create(true).attr('asd', '123').attr('asdsd', '321').xmlns('demo', 'http://demo.com')
-.element('data', XMLWriter.create().element('inner', XMLWriter.create().text('asd'))).toXML());
+server.start().then(() => {
+    console.log('Server started');
+});

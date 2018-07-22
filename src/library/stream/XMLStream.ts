@@ -1,4 +1,4 @@
-import { XMLHelper, XMLType } from '../xml/XMLHelper'
+import { XMLWriter } from '../xml/XMLWriter';
 
 export class XMLStream {
 
@@ -9,59 +9,35 @@ export class XMLStream {
     public static readonly VER_XMLNS = 'urn:xmpp:features:rosterver';
     public static readonly REGISTER_XMLNS = 'http://jabber.org/features/iq-register';
 
-    public createStreamMessage(from: string, to: string, id?: string): XMLType {
-        return {
-            'stream:stream': {
-                _attributes: {
-                    from: from,
-                    id: id,
-                    to: to,
-                    version: '1.0',
-                    'xml:lang': 'en',
-                    'xmlns': XMLStream.JABBER_XMLNS,
-                    'xmlns:stream': XMLStream.STREAM_XMLNS
-                }
-            }
-        }
+    public createOpenStreamMessage(from: string, to: string, id?: string): string {
+        return XMLWriter.create()
+            .element('stream:stream', XMLWriter.create()
+                .attr('from', from)
+                .attr('to', to)
+                .attr('id', id)
+                .attr('version', '1.0')
+                .attr('xml:lang', 'en')
+                .xmlns('', XMLStream.JABBER_XMLNS)
+                .xmlns('stream', XMLStream.STREAM_XMLNS)
+            ).toOpenXML();
     }
 
-    public createFeaturesMessage(): XMLType {
-        return {
-            'stream:features': {
-                'mechanisms': {
-                    _attributes: {
-                        'xmlns': XMLStream.MECHANISMS_XMLNS
-                    },
-                    'mechanism': [{
-                        _text: 'PLAIN'
-                    }, {
-                        _text: 'SCRAM-SHA-1'
-                    }, {
-                        _text: 'CRAM-MD5'
-                    }, {
-                        _text: 'DIGEST-MD5'
-                    }
-                    ]
-                },
-                'compression': {
-                    _attributes: {
-                        'xlmns': XMLStream.COMPRESSION_XMLNS
-                    },
-                    method: {
-                        _text: 'zlib'
-                    }
-                },
-                'ver': {
-                    _attributes: {
-                        'xlmns': XMLStream.VER_XMLNS
-                    }
-                },
-                'register': {
-                    _attributes: {
-                        'xlmns': XMLStream.REGISTER_XMLNS
-                    }
-                }
-            }
-        }
+    public createCloseStreamMessage(): string {
+        return '</stream:stream>';
+    }
+
+    public createFeaturesMessage(): XMLWriter {
+        return XMLWriter.create()
+            .element('stream:features', XMLWriter.create()
+                .element('mechanisms', XMLWriter.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
+                    .element('mechanism', XMLWriter.create().text('PLAIN'), XMLWriter.create().text('SCRAM-SHA-1'), XMLWriter.create().text('CRAM-MD5'), XMLWriter.create().text('DIGEST-MD5'),
+                )
+                )
+                .element('compression', XMLWriter.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
+                    .element('method', XMLWriter.create().text('zlib'))
+                )
+                .element('ver', XMLWriter.create().xmlns('', XMLStream.VER_XMLNS))
+                .element('register', XMLWriter.create().xmlns('', XMLStream.REGISTER_XMLNS))
+            )
     }
 }

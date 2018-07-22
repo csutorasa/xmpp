@@ -27,31 +27,34 @@ export class XMLReader {
     }
 
     public getXmlns(ns: string): string {
-        if(ns === '') {
+        if (ns === '') {
             return this.attributes.xmlns;
         } else {
             return this.attributes['xmlns:' + ns];
         }
     }
 
-    public getContent(data: string): string {
-        this.content = data;
+    public getContent(): string {
         return this.content;
     }
 
-    public getElement(name: string): XMLReader[] {
-        return this.elements[name];
+    public getElement(name: string): XMLReader {
+        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name][0] : null;
+    }
+
+    public getElements(name: string): XMLReader[] {
+        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name] : [];
     }
 
     protected static fromElementCompact(element: ElementCompact): XMLReader {
         const reader = new XMLReader();
-        if(element._declaration) {
+        if (element._declaration) {
             reader.declaration = {
                 attributes: {}
             }
             Object.assign(reader.declaration.attributes, element._declaration._attributes);
         }
-        if(element._attributes) {
+        if (element._attributes) {
             Object.assign(reader.attributes, element._attributes);
         }
         if (Object.keys(element).filter(k => k.indexOf('_') !== 0).length === 0) {
@@ -63,8 +66,12 @@ export class XMLReader {
                 reader.isCdata = true;
             }
         } else {
-            for (let name in Object.keys(element).filter(k => k.indexOf('_') !== 0)) {
-                reader.elements[name] = element[name].map(f => this.fromElementCompact(f));
+            for (let name of Object.keys(element).filter(k => k.indexOf('_') !== 0)) {
+                if (element[name] instanceof Array) {
+                    reader.elements[name] = element[name].map(f => this.fromElementCompact(f));
+                } else {
+                    reader.elements[name] = [this.fromElementCompact(element[name])];
+                }
             }
         }
         return reader;
