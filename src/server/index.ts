@@ -2,10 +2,10 @@ import { TcpServer } from "./server/TcpServer";
 import { OpenStreamHandler } from "./stream/OpenStreamHandler";
 import { XMPPServer } from "./server/XMPPServer";
 import { CloseStreamHandler } from "./stream/CloseStreamHandler";
-import { TcpsServer } from "./server/TcpsServer";
 import { NonSASLAuthenticationHandler } from "./xep/0078/NonSASLAuthenticationHandler";
 import { PlainAuthHandler } from "./auth/PlainAuthHandler";
 import { BindHandler } from "./stream/BindHandler";
+import { SessionHandler } from "./stream/SessionHandler";
 
 const server = new XMPPServer()
 
@@ -16,6 +16,7 @@ server
     .addHandler(new CloseStreamHandler())
     .addHandler(new PlainAuthHandler())
     .addHandler(new BindHandler())
+    .addHandler(new SessionHandler())
     .addHandler(new NonSASLAuthenticationHandler())
 
 server.start().then(() => {

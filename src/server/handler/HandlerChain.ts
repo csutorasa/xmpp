@@ -17,12 +17,9 @@ export class HandlerChain {
 
     public execute(server: ServerContext, client: ClientContext, request: string): void {
         const supported = this.handlers.filter(h => this.isSupported(h, server, client, request));
-        if (supported.length > 1) {
-            throw new Error('Ambiguous handlers are found.');
-        }
-        if (supported.length == 1) {
-            supported[0].handleRaw(server, client, request);
-        }
+        supported.forEach(s => {
+            s.handleRaw(server, client, request);
+        })
     }
 
     protected isSupported(handler: Handler, server: ServerContext, client: ClientContext, request: string): boolean {

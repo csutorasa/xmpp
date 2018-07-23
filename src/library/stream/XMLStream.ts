@@ -8,10 +8,11 @@ export class XMLStream {
     public static readonly COMPRESSION_XMLNS = 'http://jabber.org/features/compress';
     public static readonly VER_XMLNS = 'urn:xmpp:features:rosterver';
     public static readonly REGISTER_XMLNS = 'http://jabber.org/features/iq-register';
-    public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind'
+    public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
+    public static readonly SESSION_XMLNS = 'urn:ietf:params:xml:ns:xmpp-session';
 
     public createOpenStreamMessage(from: string, to: string): string {
-        return XMLWriter.create()
+        return XMLWriter.create(true)
             .element('stream:stream', XMLWriter.create()
                 .text('')
                 .xmlns('', XMLStream.JABBER_XMLNS)

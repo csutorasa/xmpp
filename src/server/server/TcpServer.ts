@@ -43,11 +43,15 @@ export class TcpServer extends AbstractServer {
             writeRaw: (res: string) => { this.write(socket, context, res); },
             close: () => this.closeClient(socket),
         };
-        //socket.setEncoding('utf8')
+        socket.setEncoding('utf8');
+        let chunk: string = '';
         socket.on('data', data => {
+            chunk += data.toString();
+            const process: string = chunk;
             if (this.inputHandler) {
-                this.inputHandler(context, data.toString());
+                this.inputHandler(context, process);
             }
+            chunk = chunk.substr(process.length + 1);
         });
         socket.on('error', err => {
             if (err.message.match(/ECONNRESET/)) {

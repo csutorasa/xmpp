@@ -1,4 +1,4 @@
-import { xml2js, ElementCompact } from 'xml-js'
+import { xml2js, ElementCompact, Element } from 'xml-js'
 
 export class XMLReader {
 
@@ -10,12 +10,12 @@ export class XMLReader {
             standalone?: 'yes' | 'no'
         }
     } = null;
-    protected content: string;
+    protected content: string | number | boolean;
     protected isCdata: boolean = false;
     protected elements: { [key: string]: XMLReader[] } = {};
 
     public static fromXML(xml: string): XMLReader {
-        return this.fromElementCompact(xml2js(xml, { compact: true }));
+        return this.fromElement(<Element>xml2js(xml, { alwaysArray: true }));
     }
 
     public static fromOpenXML(xml: string): XMLReader {
@@ -35,7 +35,7 @@ export class XMLReader {
     }
 
     public getContent(): string {
-        return this.content;
+        return this.content + '';
     }
 
     public getElement(name: string): XMLReader {
@@ -46,32 +46,35 @@ export class XMLReader {
         return this.elements[name] && this.elements[name].length > 0 ? this.elements[name] : [];
     }
 
-    protected static fromElementCompact(element: ElementCompact): XMLReader {
+    protected static fromElement(element: Element): XMLReader {
         const reader = new XMLReader();
-        if (element._declaration) {
+        if (element.declaration) {
             reader.declaration = {
                 attributes: {}
             }
-            Object.assign(reader.declaration.attributes, element._declaration._attributes);
+            Object.assign(reader.declaration.attributes, element.declaration.attributes);
         }
-        if (element._attributes) {
-            Object.assign(reader.attributes, element._attributes);
+        if (element.attributes) {
+            Object.assign(reader.attributes, element.attributes);
         }
-        if (Object.keys(element).filter(k => k.indexOf('_') !== 0).length === 0) {
-            if (element._cdata) {
-                reader.content = element._cdata;
-                reader.isCdata = true;
-            } else {
-                reader.content = element._text + '';
-                reader.isCdata = true;
-            }
-        } else {
-            for (let name of Object.keys(element).filter(k => k.indexOf('_') !== 0)) {
-                if (element[name] instanceof Array) {
-                    reader.elements[name] = element[name].map(f => this.fromElementCompact(f));
+
+        if (element.elements) {
+            const contentChildren = element.elements.filter(e => e.type === 'text' || e.type === 'cdata');
+            const elementChildren = element.elements.filter(e => e.type !== 'text' && e.type !== 'cdata');
+            if (contentChildren.length !== 0) {
+                if (contentChildren.filter(e => e.type === 'cdata').length !== 0) {
+                    reader.content = contentChildren.filter(e => e.type === 'cdata')[0].cdata;
+                    reader.isCdata = true;
                 } else {
-                    reader.elements[name] = [this.fromElementCompact(element[name])];
+                    reader.content = contentChildren.filter(e => e.type === 'text')[0].text;
+                    reader.isCdata = true;
                 }
+            }
+            for (let elem of elementChildren) {
+                if (!reader.elements[elem.name]) {
+                    reader.elements[elem.name] = []
+                }
+                reader.elements[elem.name].push(this.fromElement(elem));
             }
         }
         return reader;

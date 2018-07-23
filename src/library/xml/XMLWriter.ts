@@ -1,4 +1,4 @@
-import { js2xml, ElementCompact } from 'xml-js'
+import { js2xml, Element } from 'xml-js'
 
 export class XMLWriter {
 
@@ -20,7 +20,7 @@ export class XMLWriter {
             factory.declaration = {
                 attributes: {
                     version: '1.0',
-                    //encoding: 'utf-8',
+                    encoding: 'utf-8',
                 }
             };
         };
@@ -69,34 +69,40 @@ export class XMLWriter {
         return this;
     }
 
-    protected toElementCompact(): ElementCompact {
-        const data: ElementCompact = {};
+    protected toElement(): Element {
+        const data: Element = {};
         if (this.declaration) {
-            data._declaration = {
-                _attributes: {}
+            data.declaration = {
+                attributes: {}
             }
-            Object.assign(data._declaration._attributes, this.declaration.attributes);
+            Object.assign(data.declaration.attributes, this.declaration.attributes);
         }
-        data._attributes = {};
-        Object.assign(data._attributes, this.attributes);
+        if(Object.keys(this.attributes).length !== 0) {
+            data.attributes = {};
+            Object.assign(data.attributes, this.attributes);
+        }
         if (Object.keys(this.elements).length === 0) {
             if (this.content != null) {
                 if (this.isCdata) {
-                    data._cdata = this.content;
+                    data.elements = [{type: 'cdata', cdata: this.content}];
                 } else {
-                    data._text = this.content;
+                    data.elements = [{type: 'text', text: this.content}];
                 }
             }
         } else {
+            data.elements = []
             for (let name in this.elements) {
-                data[name] = this.elements[name].map(f => f.toElementCompact());
+                const elems = this.elements[name].map(f => f.toElement());
+                elems.forEach(e => e.name = name);
+                elems.forEach(e => e.type = 'element');
+                data.elements.push(...elems);
             }
         }
         return data;
     }
 
     public toXML(): string {
-        return js2xml(this.toElementCompact(), { compact: true }).replace(/"/g, "'");
+        return js2xml(this.toElement(), { compact: false }).replace(/"/g, "'");
     }
 
     public toOpenXML(): string {
