@@ -2,6 +2,7 @@ import { XMLStream, XMLWriter } from "../../../library";
 import { ClientContext, ClientState } from "../../context/ClientContext";
 import { Handler } from "../../handler/Handler";
 import { ServerContext } from "../../context/ServerContext";
+import { XMLEvent } from "../../../library/xml/XMLEvent";
 
 
 export class NonSASLAuthenticationHandler extends Handler {
@@ -11,11 +12,11 @@ export class NonSASLAuthenticationHandler extends Handler {
         context.authfeatures.element('auth', XMLWriter.create().xmlns('', 'http://jabber.org/features/iq-auth'));
     }
 
-    public isSupportedRaw(server: ServerContext, client: ClientContext, request: string): boolean {
-        return client.state !== ClientState.Connected && request === this.xmlStream.createCloseStreamMessage();
+    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
+        return false;
     }
 
-    public handleRaw(server: ServerContext, client: ClientContext, request: string): void {
-        client.state = ClientState.Disconnected;
+    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
+        
     }
 }

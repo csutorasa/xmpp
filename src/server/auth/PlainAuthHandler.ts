@@ -2,6 +2,8 @@ import { XMLStream, XMLWriter, XMLReader } from "../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
+import { XMLEvent } from "../../library/xml/XMLEvent";
+import { XMLEventHelper } from "../../library/xml/XMLEventHelper";
 
 
 export class PlainAuthHandler extends Handler {
@@ -13,17 +15,20 @@ export class PlainAuthHandler extends Handler {
         )
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, request: XMLReader): boolean {
-        const auth = request.getElement('auth')
-        return auth != null && auth.getAttr('mechanism') === 'PLAIN';
+    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
+        if (!XMLEventHelper.is(events, 'open', 'auth')) {
+            return false;
+        }
+        const tag = XMLEventHelper.getTag(events).getElement('auth');
+        return tag != null && tag.getAttr('mechanism') === 'PLAIN';
     }
 
-    public handle(server: ServerContext, client: ClientContext, request: XMLReader): void {
-        const auth = request.getElement('auth')
+    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
+        const auth = XMLEventHelper.processTag(events).getElement('auth');
         console.log('auth', auth.getContent());
         client.state = ClientState.Authenticated;
         client.username = 'demo';
         const success = XMLWriter.create().element('success', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl'));
-        client.write(success);
+        client.writeXML(success);
     }
 }

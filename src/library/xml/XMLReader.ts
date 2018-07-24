@@ -1,4 +1,5 @@
 import { xml2js, ElementCompact, Element } from 'xml-js'
+import { XMLEvent } from './XMLEvent';
 
 export class XMLReader {
 
@@ -20,6 +21,47 @@ export class XMLReader {
 
     public static fromOpenXML(xml: string): XMLReader {
         return this.fromXML(xml.replace(/>$/, "/>"));
+    }
+
+    public static fromEvents(events: XMLEvent[]): XMLReader {
+        const reader = new XMLReader();
+        const processableEvents = events.filter(e => e.type !== 'instruction' || e.name === 'xml');
+        while (processableEvents.length !== 0) {
+            const event = processableEvents[0];
+            if (event.type === 'open') {
+                const to = processableEvents.findIndex(e => e.type === 'close' && e.name == event.name);
+                if(to === -1) {
+                    throw new Error('Cannot find closing tag for ' + event.name);
+                }
+                if(!reader.elements[event.name]) {
+                    reader.elements[event.name] = []
+                }
+                const innerEvents = processableEvents.splice(0, to + 1);
+                const newElement = this.fromEvents(innerEvents.slice(1, -1));
+                newElement.attributes = {}
+                Object.assign(newElement.attributes, event.attributes);
+                reader.elements[event.name].push(newElement);
+            } else if (event.type === 'data') {
+                reader.content = event.data;
+                processableEvents.shift();
+            } else if (event.type === 'instruction') {
+                if (event.attributes.version || event.attributes.encoding) {
+                    if (!reader.attributes) {
+                        reader.declaration = {};
+                    }
+                    if (event.attributes.version) {
+                        reader.declaration.attributes.version = event.attributes.version;
+                    }
+                    if (event.attributes.encoding) {
+                        reader.declaration.attributes.encoding = event.attributes.encoding;
+                    }
+                }
+                processableEvents.shift();
+            } else {
+                throw new Error('Invalid event ' + event.type);
+            }
+        }
+        return reader;
     }
 
     public getAttr(key: string): string {

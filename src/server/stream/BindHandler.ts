@@ -2,6 +2,8 @@ import { XMLStream, XMLWriter, XMLReader } from "../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
+import { XMLEvent } from "../../library/xml/XMLEvent";
+import { XMLEventHelper } from "../../library/xml/XMLEventHelper";
 
 
 export class BindHandler extends Handler {
@@ -11,19 +13,22 @@ export class BindHandler extends Handler {
         context.features.element('bind', XMLWriter.create().xmlns('', XMLStream.BIND_XMLNS));
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, request: XMLReader): boolean {
-        const iq = request.getElement('iq')
+    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
+        if (!XMLEventHelper.is(events, 'open', 'iq')) {
+            return false;
+        }
+        const iq = XMLEventHelper.getTag(events).getElement('iq');
         return iq != null && iq.getAttr('type') === 'set' && iq.getElement('bind') && iq.getElement('bind').getXmlns('') == XMLStream.BIND_XMLNS
             && iq.getElement('bind').getElement('resource') && iq.getElement('bind').getElement('resource').getContent() != null;
     }
 
-    public handle(server: ServerContext, client: ClientContext, request: XMLReader): void {
-        const iq = request.getElement('iq');
+    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
+        const iq = XMLEventHelper.processTag(events).getElement('iq');
         client.resource = iq.getElement('bind').getElement('resource') ? iq.getElement('bind').getElement('resource').getContent() : 'randomresource';
-        client.write(XMLWriter.create()
+        client.writeXML(XMLWriter.create()
             .element('iq', XMLWriter.create()
                 .attr('type', 'result')
-                .attr('id', request.getElement('iq').getAttr('id'))
+                .attr('id', iq.getAttr('id'))
                 .attr('to', server.hostname + '/' + client.resource)
                 .element('bind', XMLWriter.create()
                     .xmlns('', 'urn:ietf:params:xml:ns:xmpp-bind')

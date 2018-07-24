@@ -12,6 +12,7 @@
   "typings": "index.d.ts",
   "types": "index.d.ts",
   "dependencies": {
+    "node-xml-stream-parser": "^1.0.7",
     "typescript": "^2.9.2",
     "xml-js": "^1.6.7"
   },

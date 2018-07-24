@@ -1,6 +1,7 @@
 import { XMLReader } from "../../library";
-import { ClientContext, ClientState } from "../context/ClientContext";
+import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
+import { XMLEvent } from "../../library/xml/XMLEvent";
 
 export abstract class Handler {
 
@@ -8,22 +9,7 @@ export abstract class Handler {
 
     }
 
-    public isSupportedRaw(server: ServerContext, client: ClientContext, request: string): boolean {
-        if (client.state === ClientState.Connected || client.state == ClientState.Authenticated) {
-            return this.isSupported(server, client, XMLReader.fromXML(request));
-        }
-        return false;
-    }
+    public abstract isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean;
 
-    public isSupported(server: ServerContext, client: ClientContext, request: XMLReader): boolean {
-        return false;
-    }
-
-    public handleRaw(server: ServerContext, client: ClientContext, request: string): void {
-        return this.handle(server, client, XMLReader.fromXML(request));
-    }
-
-    public handle(server: ServerContext, client: ClientContext, request: XMLReader): void {
-
-    }
+    public abstract handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void;
 }

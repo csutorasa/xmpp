@@ -4,6 +4,7 @@ import { ClientContext } from "../context/ClientContext";
 import { HandlerChain } from "../handler/HandlerChain";
 import { Handler } from "../handler/Handler";
 import { XMLWriter } from "../../library";
+import { XMLEvent } from "../../library/xml/XMLEvent";
 
 export class XMPPServer extends AbstractServer {
 
@@ -22,6 +23,7 @@ export class XMPPServer extends AbstractServer {
     public registerServer(server: AbstractServer): XMPPServer {
         this.servers.push(server);
         server.inputHandler = (context, data) => { this.onData(context, data); };
+        server.inputXMLHandler = (context, events) => { this.onXML(context, events); };
         server.outputHandler = (context, data, promise) => { this.onWrite(context, data, promise); };
         return this;
     }
@@ -37,13 +39,17 @@ export class XMPPServer extends AbstractServer {
     }
 
     protected onData(context: ClientContext, data: string): void {
-        console.log('<<< Input:', data);
-        this.handlerChain.execute(this.context, context, data);
+        console.log('<<< RawInput:', data);
+    }
+
+    protected onXML(context: ClientContext, events: XMLEvent[]): void {
+        // console.log('<<< XMLInput:', events[events.length - 1]);
+        this.handlerChain.execute(this.context, context, events);
     }
 
     protected onWrite(context: ClientContext, data: string, promise: Promise<any>): void {
         promise.then(() => {
-            console.log('>>> Output:', data);
+            console.log('>>> RawOutput:', data);
         }, err => {
             console.error('>>> Output failed:', err);
         })

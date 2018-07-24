@@ -1,6 +1,6 @@
 import * as net from 'net';
 import { AbstractServer } from './AbstractServer';
-import { XMLWriter } from '../../library';
+import { XMLWriter, XMLStreamReader } from '../../library';
 import { ClientContext, ClientState } from '../context/ClientContext';
 
 export class TcpServer extends AbstractServer {
@@ -39,19 +39,23 @@ export class TcpServer extends AbstractServer {
     protected onNewClient(socket: net.Socket) {
         const context: ClientContext = {
             state: ClientState.Connecting,
-            write: (res: XMLWriter) => { this.write(socket, context, res.toXML()); },
-            writeRaw: (res: string) => { this.write(socket, context, res); },
+            writeXML: (res: XMLWriter) => { this.write(socket, context, res.toXML()); },
+            writeString: (res: string) => { this.write(socket, context, res); },
             close: () => this.closeClient(socket),
         };
         socket.setEncoding('utf8');
-        let chunk: string = '';
-        socket.on('data', data => {
-            chunk += data.toString();
-            const process: string = chunk;
-            if (this.inputHandler) {
-                this.inputHandler(context, process);
+        const stream = new XMLStreamReader();
+        stream.on(() => {
+            if (this.inputXMLHandler) {
+                this.inputXMLHandler(context, stream.getContent());
             }
-            chunk = chunk.substr(process.length + 1);
+        });
+        socket.on('data', data => {
+            const str = data.toString().replace(/'/g, '"');
+            if (this.inputHandler) {
+                this.inputHandler(context, str);
+            }
+            stream.append(str);
         });
         socket.on('error', err => {
             if (err.message.match(/ECONNRESET/)) {

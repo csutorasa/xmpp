@@ -13,7 +13,7 @@ export interface ClientContext {
     state: ClientState;
     username?: string;
     resource?: string;
-    writeRaw: (response: string) => void;
-    write: (response: XMLWriter) => void;
+    writeString: (response: string) => void;
+    writeXML: (response: XMLWriter) => void;
     close: () => void;
 }
