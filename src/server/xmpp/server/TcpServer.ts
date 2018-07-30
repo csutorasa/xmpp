@@ -1,6 +1,6 @@
 import * as net from 'net';
 import { AbstractServer } from './AbstractServer';
-import { XMLWriter, XMLStreamReader } from '../../library';
+import { XMLWriter, XMLStreamReader } from '../../../library';
 import { ClientContext, ClientState } from '../context/ClientContext';
 
 export class TcpServer extends AbstractServer {

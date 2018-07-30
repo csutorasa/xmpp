@@ -1,8 +1,7 @@
-import { XMLStream, XMLWriter } from "../../../library";
-import { ClientContext, ClientState } from "../../context/ClientContext";
+import { XMLStream, XMLWriter, XMLEvent } from "../../../../library";
+import { ClientContext } from "../../context/ClientContext";
 import { Handler } from "../../handler/Handler";
 import { ServerContext } from "../../context/ServerContext";
-import { XMLEvent } from "../../../library/xml/XMLEvent";
 
 
 export class NonSASLAuthenticationHandler extends Handler {

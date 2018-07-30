@@ -3,8 +3,7 @@ import { ServerContext } from "../context/ServerContext";
 import { ClientContext } from "../context/ClientContext";
 import { HandlerChain } from "../handler/HandlerChain";
 import { Handler } from "../handler/Handler";
-import { XMLWriter } from "../../library";
-import { XMLEvent } from "../../library/xml/XMLEvent";
+import { XMLWriter, XMLEvent } from "../../../library";
 
 export class XMPPServer extends AbstractServer {
 

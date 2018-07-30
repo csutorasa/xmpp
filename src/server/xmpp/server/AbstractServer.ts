@@ -1,7 +1,6 @@
-import { XMLStream } from "../../library";
+import { XMLStream, XMLEvent } from "../../../library";
 import { Socket } from "net";
 import { ClientContext } from "../context/ClientContext";
-import { XMLEvent } from "../../library/xml/XMLEvent";
 
 export abstract class AbstractServer {
 

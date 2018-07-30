@@ -1,7 +1,6 @@
-import { XMLReader } from "../../library";
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent } from "../../library/xml/XMLEvent";
+import { XMLEvent } from "../../../library";
 
 export abstract class Handler {
 

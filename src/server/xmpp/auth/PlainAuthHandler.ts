@@ -1,9 +1,7 @@
-import { XMLStream, XMLWriter, XMLReader } from "../../library";
+import { XMLStream, XMLWriter, XMLEvent, XMLEventHelper } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent } from "../../library/xml/XMLEvent";
-import { XMLEventHelper } from "../../library/xml/XMLEventHelper";
 
 
 export class PlainAuthHandler extends Handler {

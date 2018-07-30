@@ -1,5 +1,4 @@
-import { XMLWriter } from "../../library";
-import { Socket } from "net";
+import { XMLWriter } from "../../../library";
 
 export enum ClientState {
     Connecting,

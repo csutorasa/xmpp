@@ -1,12 +1,12 @@
-import { TcpServer } from "./server/TcpServer";
-import { XMPPServer } from "./server/XMPPServer";
-import { OpenStreamHandler } from "./stream/OpenStreamHandler";
-import { InstructionHandler } from "./stream/InstructionHandler";
-import { CloseStreamHandler } from "./stream/CloseStreamHandler";
-import { NonSASLAuthenticationHandler } from "./xep/0078/NonSASLAuthenticationHandler";
-import { PlainAuthHandler } from "./auth/PlainAuthHandler";
-import { BindHandler } from "./stream/BindHandler";
-import { SessionHandler } from "./stream/SessionHandler";
+import { TcpServer } from "./xmpp/server/TcpServer";
+import { XMPPServer } from "./xmpp/server/XMPPServer";
+import { OpenStreamHandler } from "./xmpp/stream/OpenStreamHandler";
+import { InstructionHandler } from "./xmpp/stream/InstructionHandler";
+import { CloseStreamHandler } from "./xmpp/stream/CloseStreamHandler";
+import { NonSASLAuthenticationHandler } from "./xmpp/xep/0078/NonSASLAuthenticationHandler";
+import { PlainAuthHandler } from "./xmpp/auth/PlainAuthHandler";
+import { BindHandler } from "./xmpp/stream/BindHandler";
+import { SessionHandler } from "./xmpp/stream/SessionHandler";
 
 const server = new XMPPServer()
 

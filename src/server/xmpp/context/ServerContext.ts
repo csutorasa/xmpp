@@ -1,4 +1,4 @@
-import { XMLWriter } from "../../library";
+import { XMLWriter } from "../../../library";
 
 export interface ServerContext {
     hostname?: string;
