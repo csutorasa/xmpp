@@ -1,4 +1,4 @@
-import { XMLStream, XMLWriter, XMLEvent, XMLEventHelper } from "../../../library";
+import { XMLStream, XMLWriter, XMLReader } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
@@ -13,16 +13,13 @@ export class PlainAuthHandler extends Handler {
         )
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        if (!XMLEventHelper.is(events, 'open', 'auth')) {
-            return false;
-        }
-        const tag = XMLEventHelper.getTag(events).getElement('auth');
+    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+        const tag = reader.getElement('auth');
         return tag != null && tag.getAttr('mechanism') === 'PLAIN';
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        const auth = XMLEventHelper.processTag(events).getElement('auth');
+    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+        const auth = reader.getElement('auth');
         console.log('auth', auth.getContent());
         client.state = ClientState.Authenticated;
         client.username = 'demo';

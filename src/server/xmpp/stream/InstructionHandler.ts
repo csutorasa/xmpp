@@ -6,11 +6,11 @@ import { ServerContext } from "../context/ServerContext";
 export class InstructionHandler extends Handler {
     protected xmlStream = new XMLStream();
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        return events.length > 0 && events[0].type === 'instruction';
+    public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
+        return event.type === 'instruction';
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        XMLEventHelper.processFirst(events);
+    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
+        
     }
 }

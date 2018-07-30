@@ -1,6 +1,6 @@
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent } from "../../../library";
+import { XMLEvent, XMLReader } from "../../../library";
 
 export abstract class Handler {
 
@@ -8,7 +8,19 @@ export abstract class Handler {
 
     }
 
-    public abstract isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean;
+    public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
+        return false;
+    }
 
-    public abstract handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void;
+    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+        return false;
+    }
+
+    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
+
+    }
+
+    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+
+    }
 }

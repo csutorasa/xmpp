@@ -1,5 +1,5 @@
 import { XMLStream, XMLWriter, XMLReader, XMLEvent, XMLEventHelper } from "../../../library";
-import { ClientContext, ClientState } from "../context/ClientContext";
+import { ClientContext } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
 
@@ -11,17 +11,14 @@ export class BindHandler extends Handler {
         context.features.element('bind', XMLWriter.create().xmlns('', XMLStream.BIND_XMLNS));
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        if (!XMLEventHelper.is(events, 'open', 'iq')) {
-            return false;
-        }
-        const iq = XMLEventHelper.getTag(events).getElement('iq');
+    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+        const iq = reader.getElement('iq');
         return iq != null && iq.getAttr('type') === 'set' && iq.getElement('bind') && iq.getElement('bind').getXmlns('') == XMLStream.BIND_XMLNS
             && iq.getElement('bind').getElement('resource') && iq.getElement('bind').getElement('resource').getContent() != null;
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        const iq = XMLEventHelper.processTag(events).getElement('iq');
+    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+        const iq = reader.getElement('iq');
         client.resource = iq.getElement('bind').getElement('resource') ? iq.getElement('bind').getElement('resource').getContent() : 'randomresource';
         client.writeXML(XMLWriter.create()
             .element('iq', XMLWriter.create()

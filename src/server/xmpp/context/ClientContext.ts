@@ -4,6 +4,7 @@ export enum ClientState {
     Connecting,
     Connected,
     Authenticated,
+    Normal,
     Disconnecting,
     Disconnected,
 }

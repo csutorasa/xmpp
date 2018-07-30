@@ -7,12 +7,11 @@ import { ServerContext } from "../context/ServerContext";
 export class CloseStreamHandler extends Handler {
     protected xmlStream = new XMLStream();
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        return XMLEventHelper.is(events, 'close', 'stream:stream');
+    public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
+        return XMLEventHelper.is(event, 'close', 'stream:stream');
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        const event = XMLEventHelper.processFirst(events);
+    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
         client.state = ClientState.Disconnected;
     }
 }

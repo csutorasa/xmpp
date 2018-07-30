@@ -3,8 +3,8 @@ import { XMLReader } from "./XMLReader";
 
 export class XMLEventHelper {
 
-    public static is(events: XMLEvent[], type: 'open' | 'close', name: string): boolean {
-        return events.length > 0 && events[0].type === type && events[0].name === name;
+    public static is(event: XMLEvent, type: 'open' | 'close', name: string): boolean {
+        return event != null && event.type === type && event.name === name;
     }
 
     public static has(events: XMLEvent[], type: 'open' | 'close', name: string): boolean {

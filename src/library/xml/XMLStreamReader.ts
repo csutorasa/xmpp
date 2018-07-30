@@ -28,14 +28,14 @@ export class XMLStreamReader {
                 type: 'data',
                 data: text,
             };
-            this.runEventHandlers(event);
+            this.runEventHandlers(event, false);
         });
         this.parser.on('cdata', (cdata: string) => {
             const event: XMLEvent = {
                 type: 'data',
                 data: cdata,
             };
-            this.runEventHandlers(event);
+            this.runEventHandlers(event, false);
         });
         this.parser.on('instruction', (name: string, attributes: { [key: string]: string }) => {
             const event: XMLEvent = {
@@ -47,7 +47,7 @@ export class XMLStreamReader {
         });
     }
 
-    protected runEventHandlers(event: XMLEvent): void {
+    protected runEventHandlers(event: XMLEvent, run: boolean = true): void {
         this.content.push(event);
         this.handlers.forEach(e => {
             e(event);

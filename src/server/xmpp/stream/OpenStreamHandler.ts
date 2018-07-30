@@ -1,4 +1,4 @@
-import { XMLStream, XMLWriter, XMLReader, XMLEvent, XMLEventHelper } from "../../../library";
+import { XMLStream, XMLEvent, XMLEventHelper } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
@@ -7,22 +7,19 @@ import { ServerContext } from "../context/ServerContext";
 export class OpenStreamHandler extends Handler {
     protected xmlStream = new XMLStream();
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        if(client.state !== ClientState.Connecting && client.state !== ClientState.Authenticated) {
-            return false;
-        }
-        return XMLEventHelper.is(events, 'open', 'stream:stream');
+    public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
+        return (client.state === ClientState.Connecting || client.state === ClientState.Authenticated) && XMLEventHelper.is(event, 'open', 'stream:stream');
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        const event = XMLEventHelper.processFirst(events);
+    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
         const from = event.attributes.from;
         const openStream = this.xmlStream.createOpenStreamMessage(server.hostname, from);
-        client.writeString(openStream);
         if(client.state === ClientState.Connecting) {
+            client.writeString(openStream);
             client.writeXML(this.xmlStream.createFeaturesMessage(server.features, server.authfeatures));
             client.state = ClientState.Connected;
-        } else {
+        } else if(client.state !== ClientState.Authenticated) {
+            client.writeString(openStream);
             client.writeXML(this.xmlStream.createFeaturesMessage(server.features));
         }
     }

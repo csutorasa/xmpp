@@ -11,16 +11,13 @@ export class SessionHandler extends Handler {
         context.features.element('bind', XMLWriter.create().xmlns('', XMLStream.BIND_XMLNS));
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, events: XMLEvent[]): boolean {
-        if (!XMLEventHelper.is(events, 'open', 'iq')) {
-            return false;
-        }
-        const iq = XMLEventHelper.getTag(events).getElement('iq');
+    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+        const iq = reader.getElement('iq');
         return iq != null && iq.getAttr('type') === 'set' && iq.getElement('session') && iq.getElement('session').getXmlns('') == XMLStream.SESSION_XMLNS;
     }
 
-    public handle(server: ServerContext, client: ClientContext, events: XMLEvent[]): void {
-        const iq = XMLEventHelper.processTag(events).getElement('iq');
+    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+        const iq = reader.getElement('iq');
         client.writeXML(XMLWriter.create()
             .element('iq', XMLWriter.create()
                 .attr('type', 'result')
