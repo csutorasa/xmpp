@@ -1,4 +1,8 @@
-export * from './stream/XMLStream';
+export * from './iq/Bind';
+export * from './iq/Session';
+
+export * from './stream/Features';
+export * from './stream/Stream';
 
 export * from './xml/XMLEventChecker';
 export * from './xml/XMLEventHelper';

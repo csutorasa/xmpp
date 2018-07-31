@@ -1,14 +1,12 @@
-import { XMLStream, XMLWriter, XMLReader } from "../../../library";
+import { Stream, XMLWriter, XMLReader } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
 
 
 export class PlainAuthHandler extends Handler {
-    protected xmlStream = new XMLStream();
-
     public init(context: ServerContext): void {
-        context.authfeatures.element('mechanisms', XMLWriter.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
+        context.authfeatures.element('mechanisms', XMLWriter.create().xmlns('', Stream.MECHANISMS_XMLNS)
             .element('mechanism', XMLWriter.create().text('PLAIN'))
         )
     }

@@ -1,26 +1,34 @@
-import { XMLStream, XMLEvent, XMLEventHelper } from "../../../library";
+import { Stream, XMLEvent, XMLEventHelper, Features } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
 
 
 export class OpenStreamHandler extends Handler {
-    protected xmlStream = new XMLStream();
+    protected stream = new Stream();
+    protected features = new Features();
 
     public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
-        return (client.state === ClientState.Connecting || client.state === ClientState.Authenticated) && XMLEventHelper.is(event, 'open', 'stream:stream');
+        return (client.state === ClientState.Connecting || client.state === ClientState.Authenticated) && this.stream.isOpenStreamMessage(event);
     }
 
     public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
-        const from = event.attributes.from;
-        const openStream = this.xmlStream.createOpenStreamMessage(server.hostname, from);
+        const request = this.stream.readOpenStreamMessage(event);
+        const openStream = this.stream.createOpenStreamMessage({
+            from: server.hostname,
+            to: request.from,
+        });
         if(client.state === ClientState.Connecting) {
             client.writeString(openStream);
-            client.writeXML(this.xmlStream.createFeaturesMessage(server.features, server.authfeatures));
+            client.writeXML(this.features.createFeaturesMessage({
+                features: [ server.authfeatures ]
+            }));
             client.state = ClientState.Connected;
-        } else if(client.state !== ClientState.Authenticated) {
+        } else if(client.state === ClientState.Authenticated) {
             client.writeString(openStream);
-            client.writeXML(this.xmlStream.createFeaturesMessage(server.features));
+            client.writeXML(this.features.createFeaturesMessage({
+                features: [ server.features ]
+            }));
         }
     }
 }

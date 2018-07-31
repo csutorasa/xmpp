@@ -5,8 +5,8 @@ import { InstructionHandler } from "./xmpp/stream/InstructionHandler";
 import { CloseStreamHandler } from "./xmpp/stream/CloseStreamHandler";
 import { NonSASLAuthenticationHandler } from "./xmpp/xep/0078/NonSASLAuthenticationHandler";
 import { PlainAuthHandler } from "./xmpp/auth/PlainAuthHandler";
-import { BindHandler } from "./xmpp/stream/BindHandler";
-import { SessionHandler } from "./xmpp/stream/SessionHandler";
+import { BindHandler } from "./xmpp/iq/BindHandler";
+import { SessionHandler } from "./xmpp/iq/SessionHandler";
 
 const server = new XMPPServer()
 

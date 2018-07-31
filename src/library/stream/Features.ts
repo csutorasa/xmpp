@@ -1,9 +1,13 @@
 import { XMLWriter } from '../xml/XMLWriter';
+import { XMLEvent } from '../xml/XMLEvent';
+import { XMLEventHelper } from '../xml/XMLEventHelper';
 
-export class XMLStream {
+export interface FeaturesResponse {
+    features: XMLWriter[];
+}
 
-    public static readonly JABBER_XMLNS = 'jabber:client';
-    public static readonly STREAM_XMLNS = 'http://etherx.jabber.org/streams';
+export class Features {
+
     public static readonly MECHANISMS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-sasl';
     public static readonly COMPRESSION_XMLNS = 'http://jabber.org/features/compress';
     public static readonly VER_XMLNS = 'urn:xmpp:features:rosterver';
@@ -11,31 +15,13 @@ export class XMLStream {
     public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
     public static readonly SESSION_XMLNS = 'urn:ietf:params:xml:ns:xmpp-session';
 
-    public createOpenStreamMessage(from: string, to: string): string {
-        return XMLWriter.create(true)
-            .element('stream:stream', XMLWriter.create()
-                .text('')
-                .xmlns('', XMLStream.JABBER_XMLNS)
-                .xmlns('stream', XMLStream.STREAM_XMLNS)
-                .attr('from', from)
-                .attr('to', to)
-                .attr('id', Math.round(Math.random() * 10000000).toString(16))
-                .attr('version', '1.0')
-                .attr('xml:lang', 'en')
-            ).toOpenXML();
-    }
-
-    public createCloseStreamMessage(): string {
-        return '</stream:stream>';
-    }
-
-    public createFeaturesMessage(...features: XMLWriter[]): XMLWriter {
+    public createFeaturesMessage(response: FeaturesResponse): XMLWriter {
         return XMLWriter.create()
-            .element('stream:features', ...features
+            .element('stream:features', ...response.features
                 /*.element('mechanisms', XMLWriter.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
                     .element('mechanism', XMLWriter.create().text('PLAIN'), XMLWriter.create().text('SCRAM-SHA-1'), XMLWriter.create().text('CRAM-MD5'), XMLWriter.create().text('DIGEST-MD5'),)
-                )*/
-                /*.element('compression', XMLWriter.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
+                )
+                .element('compression', XMLWriter.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
                     .element('method', XMLWriter.create().text('zlib'))
                 )
                 .element('ver', XMLWriter.create().xmlns('', XMLStream.VER_XMLNS))

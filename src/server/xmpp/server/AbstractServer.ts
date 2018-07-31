@@ -1,4 +1,4 @@
-import { XMLStream, XMLEvent } from "../../../library";
+import { Stream, XMLEvent } from "../../../library";
 import { Socket } from "net";
 import { ClientContext } from "../context/ClientContext";
 
@@ -9,7 +9,7 @@ export abstract class AbstractServer {
     public outputHandler: (context: ClientContext, data: string, promise: Promise<any>) => void;
 
     protected closeClient(socket: Socket) {
-        socket.write(new XMLStream().createCloseStreamMessage(), 'utf-8');
+        socket.write(new Stream().createCloseStreamMessage(), 'utf-8');
     }
 
     abstract start(): Promise<any>;
