@@ -2,6 +2,11 @@
 
 ## Developer guide
 
+Prerequisites:
+
+- [Node.js](https://nodejs.org/) 7 or later is recommended
+- Any XMPP client for testing and using like [Pidgin](https://www.pidgin.im/)
+
 Clone the repository and install the required dependencies. Build the application and run it.
 
 ```bash
