@@ -2,14 +2,12 @@
   "name": "xmpp",
   "version": "1.0.0",
   "description": "XMPP",
-  "main": "dist/server/index.js",
+  "main": "dist/server.js",
   "scripts": {
-    "install": "tsc",
-    "watch": "tsc --watch",
-    "start": "node dist/server/index.js",
-    "build": "webpack --mode production webpack.config.js",
-    "dev": "node webpack.dev.config.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "node webpack.prod.config.js",
+    "watch": "node webpack.dev.config.js",
+    "start": "node dist/server.js",
+    "test": "echo \"No tests are specified\""
   },
   "author": "",
   "license": "ISC",
@@ -23,7 +21,6 @@
     "@types/node": "^10.5.2",
     "ts-loader": "^4.4.2",
     "typescript": "^2.9.2",
-    "webpack": "^4.16.3",
-    "webpack-cli": "^3.1.0"
+    "webpack": "^4.16.3"
   }
 }

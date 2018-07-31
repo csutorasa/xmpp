@@ -1,39 +1,9 @@
 const webpack = require('webpack');
 const child_process = require('child_process');
-const path = require('path');
-const fs = require('fs');
+const config = require('./webpack.config')
 
-const nodeModules = {};
-fs.readdirSync('node_modules')
-    .filter(function (x) {
-        return ['.bin'].indexOf(x) === -1;
-    })
-    .forEach(function (mod) {
-        nodeModules[mod] = 'commonjs ' + mod;
-    });
-
-const compiler = webpack({
-    entry: path.join(__dirname, 'src', 'server', 'index.ts'),
-    target: 'node',
-    mode: 'development',
-    output: {
-        path: path.join(__dirname, 'dist'),
-        filename: 'server.js'
-    },
-    module: {
-        rules: [
-            {
-                test: /\.tsx?$/,
-                use: 'ts-loader',
-                exclude: /node_modules/
-            }
-        ]
-    },
-    resolve: {
-        extensions: ['.ts', '.tsx', ".js", ".json"]
-    },
-    externals: nodeModules
-});
+config.mode = 'development';
+const compiler = webpack(config);
 
 let serverProcessPromise = Promise.resolve();
 let serverProcess = null;
