@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "XMPP",
   "main": "dist/server.js",
+  "private": true,
   "scripts": {
     "install": "node webpack.prod.config.js",
     "watch": "node webpack.dev.config.js",
