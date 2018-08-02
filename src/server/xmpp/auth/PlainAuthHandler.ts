@@ -19,8 +19,29 @@ export class PlainAuthHandler extends Handler {
     public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
         const auth = reader.getElement('auth');
         console.log('auth', auth.getContent());
-        client.state = ClientState.Authenticated;
-        client.username = 'demo';
+        var buf = Buffer.from(auth.getContent(), 'base64');
+        if(buf.indexOf("\x00",0) == 0)
+        {
+            var idx: number = buf.indexOf("\x00",1);
+            if(idx > 1)
+            {
+                var bufUser = buf.slice(1, idx);
+                var user: string = bufUser.toString();
+                client.username = user;
+                console.log('auth-user:', user);
+                var bufPw = buf.slice(idx);
+                var pw: string = bufPw.toString();
+                console.log('auth-pw:', pw);
+                if(pw.localeCompare("password") == 0)
+                {
+                    client.state = ClientState.Authenticated;
+                }
+            }
+        }
+        else{
+            console.log('auth', 'Invalid PLAIN format');
+        }
+        
         const success = XMLWriter.create().element('success', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl'));
         client.writeXML(success);
     }
