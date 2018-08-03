@@ -21,13 +21,13 @@ export class OpenStreamHandler extends Handler {
         if(client.state === ClientState.Connecting) {
             client.writeString(openStream);
             client.writeXML(this.features.createFeaturesMessage({
-                features: [ server.authfeatures ]
+                features: server.authfeatures
             }));
             client.state = ClientState.Connected;
         } else if(client.state === ClientState.Authenticated) {
             client.writeString(openStream);
             client.writeXML(this.features.createFeaturesMessage({
-                features: [ server.features ]
+                features: server.features
             }));
         }
     }

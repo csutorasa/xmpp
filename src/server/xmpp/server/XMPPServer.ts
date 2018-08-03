@@ -15,8 +15,8 @@ export class XMPPServer extends AbstractServer {
     public constructor() {
         super();
         this.context.hostname = 'arminpc';
-        this.context.features = XMLWriter.create();
-        this.context.authfeatures = XMLWriter.create();
+        this.context.features = XMLWriter.create('stream:features');
+        this.context.authfeatures = XMLWriter.create('stream:features');
     }
 
     public registerServer(server: AbstractServer): XMPPServer {

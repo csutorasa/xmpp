@@ -9,13 +9,17 @@ export class XMLWriter {
             encoding?: 'utf-8' | string
             standalone?: 'yes' | 'no'
         }
-    } = null;
+    };
     protected content: string;
     protected isCdata: boolean = false;
-    protected elements: { [key: string]: XMLWriter[] } = {};
+    protected elements: XMLWriter[] = [];
 
-    public static create(addHeader: boolean = false): XMLWriter {
-        const factory = new XMLWriter();
+    public constructor(protected name: string) {
+
+    }
+
+    public static create(name: string, addHeader: boolean = false): XMLWriter {
+        const factory = new XMLWriter(name);
         if (addHeader) {
             factory.declaration = {
                 attributes: {
@@ -61,16 +65,16 @@ export class XMLWriter {
         return this.elements[name] && this.elements[name].length > 0 ? this.elements[name] : [];
     }
 
-    public element(name: string, ...element: XMLWriter[]): XMLWriter {
-        if (!this.elements[name]) {
-            this.elements[name] = [];
-        }
-        this.elements[name].push(...element);
+    public element(...element: XMLWriter[]): XMLWriter {
+        this.elements.push(...element);
         return this;
     }
 
     protected toElement(): Element {
-        const data: Element = {};
+        const data: Element = {
+            name: this.name,
+            type: 'element',
+        };
         if (this.declaration) {
             data.declaration = {
                 attributes: {}
@@ -90,19 +94,20 @@ export class XMLWriter {
                 }
             }
         } else {
-            data.elements = []
-            for (let name in this.elements) {
-                const elems = this.elements[name].map(f => f.toElement());
-                elems.forEach(e => e.name = name);
-                elems.forEach(e => e.type = 'element');
-                data.elements.push(...elems);
-            }
+            data.elements = this.elements.map(f => f.toElement());
+            data.elements.forEach(e => e.type = 'element');
         }
         return data;
     }
 
     public toXML(): string {
-        return js2xml(this.toElement(), { compact: false }).replace(/"/g, "'");
+        const originalElement = this.toElement();
+        const element: Element = {
+            declaration: originalElement.declaration,
+            elements: [ originalElement ],
+            type: 'element',
+        }
+        return js2xml(element, { compact: false }).replace(/"/g, "'");
     }
 
     public toOpenXML(): string {

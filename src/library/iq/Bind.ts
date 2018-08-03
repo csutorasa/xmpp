@@ -16,15 +16,13 @@ export class Bind extends IqBase {
     public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
 
     public createResponse(response: BindResponse): XMLWriter {
-        return XMLWriter.create()
-            .element('iq', XMLWriter.create()
-                .attr('type', 'result')
-                .attr('id', response.id)
-                .attr('to', response.jid.host + '/' + response.jid.resource)
-                .element('bind', XMLWriter.create()
-                    .xmlns('', Bind.BIND_XMLNS)
-                    .element('jid', XMLWriter.create().text(JIDHelper.toString(response.jid)))
-                )
+        return XMLWriter.create('iq')
+            .attr('type', 'result')
+            .attr('id', response.id)
+            .attr('to', response.jid.host + '/' + response.jid.resource)
+            .element(XMLWriter.create('bind')
+                .xmlns('', Bind.BIND_XMLNS)
+                .element(XMLWriter.create('jid').text(JIDHelper.toString(response.jid)))
             )
     }
 

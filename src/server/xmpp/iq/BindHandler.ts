@@ -9,7 +9,7 @@ export class BindHandler extends Handler {
     protected bind = new Bind();
 
     public init(context: ServerContext): void {
-        context.features.element('bind', XMLWriter.create().xmlns('', Bind.BIND_XMLNS));
+        context.features.element(XMLWriter.create('bind').xmlns('', Bind.BIND_XMLNS));
     }
 
     public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {

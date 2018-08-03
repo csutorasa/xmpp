@@ -24,17 +24,16 @@ export class Stream {
     public static readonly REGISTER_XMLNS = 'http://jabber.org/features/iq-register';
 
     public createOpenStreamMessage(response: StreamResponse): string {
-        return XMLWriter.create(true)
-            .element('stream:stream', XMLWriter.create()
-                .text('')
-                .xmlns('', Stream.JABBER_XMLNS)
-                .xmlns('stream', Stream.STREAM_XMLNS)
-                .attr('from', response.from)
-                .attr('to', response.to)
-                .attr('id', response.id ? response.id : Math.round(Math.random() * 10000000).toString(16))
-                .attr('version', response.version ? response.version : '1.0')
-                .attr('xml:lang', 'en')
-            ).toOpenXML();
+        return XMLWriter.create('stream:stream', true)
+            .text('')
+            .xmlns('', Stream.JABBER_XMLNS)
+            .xmlns('stream', Stream.STREAM_XMLNS)
+            .attr('from', response.from)
+            .attr('to', response.to)
+            .attr('id', response.id ? response.id : Math.round(Math.random() * 10000000).toString(16))
+            .attr('version', response.version ? response.version : '1.0')
+            .attr('xml:lang', 'en')
+            .toOpenXML();
     }
 
     public isOpenStreamMessage(request: XMLEvent): boolean {

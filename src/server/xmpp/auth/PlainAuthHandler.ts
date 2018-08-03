@@ -6,8 +6,9 @@ import { ServerContext } from "../context/ServerContext";
 
 export class PlainAuthHandler extends Handler {
     public init(context: ServerContext): void {
-        context.authfeatures.element('mechanisms', XMLWriter.create().xmlns('', Stream.MECHANISMS_XMLNS)
-            .element('mechanism', XMLWriter.create().text('PLAIN'))
+        context.authfeatures.element(XMLWriter.create('mechanisms')
+            .xmlns('', Stream.MECHANISMS_XMLNS)
+            .element(XMLWriter.create('mechanism').text('PLAIN'))
         )
     }
 
@@ -21,11 +22,9 @@ export class PlainAuthHandler extends Handler {
         console.log('auth', auth.getContent());
         var buf = Buffer.from(auth.getContent(), 'base64');
         var authenticated: boolean = false;
-        if(buf.indexOf("\x00",0) == 0)
-        {
-            var idx: number = buf.indexOf("\x00",1);
-            if(idx > 1)
-            {
+        if (buf.indexOf("\x00", 0) == 0) {
+            var idx: number = buf.indexOf("\x00", 1);
+            if (idx > 1) {
                 var bufUser = buf.slice(1, idx);
                 var user: string = bufUser.toString();
                 var bufPw = buf.slice(idx);
@@ -36,38 +35,34 @@ export class PlainAuthHandler extends Handler {
                 authenticated = this.authenticate(user, pw);
             }
         }
-        else{
+        else {
             console.log('auth', 'Invalid PLAIN format');
         }
 
-        if(authenticated)
-        {
+        if (authenticated) {
             client.username = user;
             client.state = ClientState.Authenticated;
-        
-            const success = XMLWriter.create().element('success', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl'));
+
+            const success = XMLWriter.create('success').xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl');
             client.writeXML(success);
         }
-        else{
-            const failure = XMLWriter.create()
-                .element('failure', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl')
-                    .element('invalid-authzid',XMLWriter.create()));
+        else {
+            const failure = XMLWriter.create('failure')
+                .xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl')
+                .element(XMLWriter.create('invalid-authzid'));
             client.writeXML(failure);
-            if(client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting)
-            {
+            if (client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting) {
                 const stream: Stream = new Stream();
                 const close: string = stream.createCloseStreamMessage();
                 client.writeString(close);
             }
-            if(client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting)
-            {
+            if (client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting) {
                 client.close();
             }
         }
     }
 
-    private authenticate(user: string, pw: string): boolean
-    {
+    private authenticate(user: string, pw: string): boolean {
         return pw.localeCompare("password") == 0;
     }
 }
