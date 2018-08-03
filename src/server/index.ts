@@ -3,7 +3,6 @@ import { XMPPServer } from "./xmpp/server/XMPPServer";
 import { OpenStreamHandler } from "./xmpp/stream/OpenStreamHandler";
 import { InstructionHandler } from "./xmpp/stream/InstructionHandler";
 import { CloseStreamHandler } from "./xmpp/stream/CloseStreamHandler";
-import { NonSASLAuthenticationHandler } from "./xmpp/xep/0078/NonSASLAuthenticationHandler";
 import { PlainAuthHandler } from "./xmpp/auth/PlainAuthHandler";
 import { BindHandler } from "./xmpp/iq/BindHandler";
 import { SessionHandler } from "./xmpp/iq/SessionHandler";
@@ -23,7 +22,6 @@ server
     .addHandler(new SessionHandler())
     .addHandler(new DiscoveryInfoHandler())
     .addHandler(new DiscoveryItemsHandler())
-    .addHandler(new NonSASLAuthenticationHandler())
 
 server.start().then(() => {
     console.log('Server started');
