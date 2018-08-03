@@ -2,6 +2,6 @@ import { XMLWriter } from "../../../library";
 
 export interface ServerContext {
     hostname?: string;
-    features?: XMLWriter;
-    authfeatures?: XMLWriter;
+    sessionFeatures?: XMLWriter;
+    authFeatures?: XMLWriter;
 }

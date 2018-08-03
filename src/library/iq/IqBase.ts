@@ -1,4 +1,5 @@
 import { XMLReader } from "../xml/XMLReader";
+import { XMLWriter } from "../xml/XMLWriter";
 
 export interface IqRequest {
     id: string;
@@ -8,8 +9,10 @@ export interface IqResponse {
     id: string;
 }
 
+export type IqRequestType = 'get' | 'set'
+
 export abstract class IqBase {
-    protected isIq(request: XMLReader, type: 'get' | 'set', element?: string, namespace?: string): boolean {
+    protected isIq(request: XMLReader, type: IqRequestType, element?: string, namespace?: string): boolean {
         const iq = request.getElement('iq');
         return iq != null && iq.getAttr('type') === type && ((element == null ||
             (iq.getElement(element) != null && (namespace == null || iq.getElement(element).getXmlns('') === namespace)))
@@ -23,5 +26,11 @@ export abstract class IqBase {
 
     protected readId(request: XMLReader): string {
         return request.getElement('iq').getAttr('id');
+    }
+
+    protected createIq(id: string, type: 'result' | 'error'): XMLWriter {
+        return XMLWriter.create('iq')
+            .attr('type', type)
+            .attr('id', id)
     }
 }

@@ -1,6 +1,7 @@
 import { XMLWriter } from '../../xml/XMLWriter';
 import { XMLReader } from '../../xml/XMLReader';
 import { IqRequest, IqResponse, IqBase } from '../IqBase';
+import { ErrorStanza } from '../../stanza/ErrorStanza';
 
 export interface DiscoveryInfoRequest extends IqRequest {
 
@@ -29,9 +30,7 @@ export class DiscoveryInfo extends IqBase {
     public static readonly DISCOVERYINFO_XMLNS = 'http://jabber.org/protocol/disco#info';
 
     public createResponse(response: DiscoveryInfoResponse): XMLWriter {
-        return XMLWriter.create('iq')
-                .attr('type', 'result')
-                .attr('id', response.id)
+        return this.createIq(response.id, 'result')
                 .attr('to', response.to)
                 .attr('from', response.from)
                 .element(XMLWriter.create('query')
@@ -40,20 +39,13 @@ export class DiscoveryInfo extends IqBase {
     }
 
     public createError(response: DiscoveryInfoResponse): XMLWriter {
-        return XMLWriter.create('iq')
-            .attr('type', 'error')
-            .attr('id', response.id)
+        return this.createIq(response.id, 'error')
             .attr('to', response.to)
             .attr('from', response.from)
             .element(XMLWriter.create('query')
                 .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS)
             )
-            .element(XMLWriter.create('error')
-                .attr('type', 'cancel')
-                .element(XMLWriter.create('item-not-found')
-                    .xmlns('', 'urn:ietf:params:xml:ns:xmpp-stanzas')
-                )
-            )
+            .element(ErrorStanza.itemNotFound())
     }
 
     public isRequest(request: XMLReader): boolean {

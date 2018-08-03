@@ -6,7 +6,7 @@ import { ServerContext } from "../context/ServerContext";
 
 export class PlainAuthHandler extends Handler {
     public init(context: ServerContext): void {
-        context.authfeatures.element(XMLWriter.create('mechanisms')
+        context.authFeatures.element(XMLWriter.create('mechanisms')
             .xmlns('', Stream.MECHANISMS_XMLNS)
             .element(XMLWriter.create('mechanism').text('PLAIN'))
         )
@@ -19,16 +19,17 @@ export class PlainAuthHandler extends Handler {
 
     public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
         const auth = reader.getElement('auth');
-        console.log('auth', auth.getContent());
-        var buf = Buffer.from(auth.getContent(), 'base64');
-        var authenticated: boolean = false;
+        const buf = Buffer.from(auth.getContent(), 'base64');
+        let authenticated: boolean = false;
+        let user: string;
+        let pw: string;
         if (buf.indexOf("\x00", 0) == 0) {
-            var idx: number = buf.indexOf("\x00", 1);
+            const idx: number = buf.indexOf("\x00", 1);
             if (idx > 1) {
-                var bufUser = buf.slice(1, idx);
-                var user: string = bufUser.toString();
-                var bufPw = buf.slice(idx);
-                var pw: string = bufPw.toString();
+                const bufUser = buf.slice(1, idx);
+                user = bufUser.toString();
+                const bufPw = buf.slice(idx);
+                pw = bufPw.toString();
                 console.log('auth-user:', user);
                 console.log('auth-pw:', pw);
 
@@ -63,6 +64,6 @@ export class PlainAuthHandler extends Handler {
     }
 
     private authenticate(user: string, pw: string): boolean {
-        return pw.localeCompare("password") == 0;
+        return pw.localeCompare('password') == 0;
     }
 }

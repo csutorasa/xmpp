@@ -16,10 +16,7 @@ export class Bind extends IqBase {
     public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
 
     public createResponse(response: BindResponse): XMLWriter {
-        return XMLWriter.create('iq')
-            .attr('type', 'result')
-            .attr('id', response.id)
-            .attr('to', response.jid.host + '/' + response.jid.resource)
+        return this.createIq(response.id, 'result')
             .element(XMLWriter.create('bind')
                 .xmlns('', Bind.BIND_XMLNS)
                 .element(XMLWriter.create('jid').text(response.jid.stringify()))
@@ -36,6 +33,6 @@ export class Bind extends IqBase {
         return {
             id: this.readId(request),
             resource: resource,
-        };
+        }; 
     }
 }

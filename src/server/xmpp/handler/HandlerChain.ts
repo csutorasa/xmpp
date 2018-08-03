@@ -1,7 +1,7 @@
 import { Handler } from "./Handler";
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent, XMLEventType, XMLEventHelper, XMLReader } from "../../../library";
+import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType } from "../../../library";
 
 export class HandlerChain {
 
@@ -29,10 +29,20 @@ export class HandlerChain {
             } else {
                 const reader: XMLReader = XMLEventHelper.getTag(events);
                 if (reader) {
-                    const supported = this.handlers.filter(h => this.isSupported(h, server, client, reader));
-                    if (supported.length > 0) {
-                        XMLEventHelper.processTag(events);
-                        supported.forEach(h => h.handle(server, client, reader));
+                    if (this.isIq(reader)) {
+                        const iqSupported = this.handlers.filter(h => this.isIqSupported(h, server, client, reader));
+                        if (iqSupported.length > 0) {
+                            XMLEventHelper.processTag(events);
+                            iqSupported.forEach(h => h.handleIq(server, client, reader));
+                        } else {
+                            // TODO
+                        }
+                    } else {
+                        const supported = this.handlers.filter(h => this.isSupported(h, server, client, reader));
+                        if (supported.length > 0) {
+                            XMLEventHelper.processTag(events);
+                            supported.forEach(h => h.handle(server, client, reader));
+                        }
                     }
                 }
             }
@@ -42,6 +52,19 @@ export class HandlerChain {
     protected isSingleSupported(handler: Handler, server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
         try {
             return handler.isSingleSupported(server, client, event);
+        } catch {
+            return false;
+        }
+    }
+
+    protected isIq(reader: XMLReader): boolean {
+        const iq = reader.getElement('iq');
+        return iq != null && (iq.getAttr('type') == 'set' || iq.getAttr('type') === 'get');
+    }
+
+    protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+        try {
+            return handler.isIqSupported(server, client, <IqRequestType>reader.getElement('iq').getAttr('type'), reader);
         } catch {
             return false;
         }

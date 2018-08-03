@@ -14,10 +14,8 @@ export class Session extends IqBase {
     public static readonly SESSION_XMLNS = 'urn:ietf:params:xml:ns:xmpp-session';
 
     public createResponse(response: SessionResponse): XMLWriter {
-        return XMLWriter.create('iq')
-            .attr('type', 'result')
+        return this.createIq(response.id, 'result')
             .attr('from', response.host)
-            .attr('id', response.id)
     }
 
     public isRequest(request: XMLReader): boolean {

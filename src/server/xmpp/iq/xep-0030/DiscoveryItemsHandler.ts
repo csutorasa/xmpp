@@ -1,4 +1,4 @@
-import { XMLReader, DiscoveryInfo, DiscoveryItems } from "../../../../library";
+import { XMLReader, DiscoveryItems, IqRequestType } from "../../../../library";
 import { ClientContext } from "../../context/ClientContext";
 import { Handler } from "../../handler/Handler";
 import { ServerContext } from "../../context/ServerContext";
@@ -7,15 +7,11 @@ export class DiscoveryItemsHandler extends Handler {
 
     protected discoveryItems = new DiscoveryItems();
 
-    public init(context: ServerContext): void {
-        
-    }
-
-    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+    public isIqSupported(server: ServerContext, client: ClientContext, type: IqRequestType, reader: XMLReader): boolean {
         return this.discoveryItems.isRequest(reader);
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+    public handleIq(server: ServerContext, client: ClientContext, reader: XMLReader): void {
         const request = this.discoveryItems.readRequest(reader);
 
         client.writeXML(this.discoveryItems.createResponse({

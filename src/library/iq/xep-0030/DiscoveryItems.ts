@@ -22,9 +22,7 @@ export class DiscoveryItems extends IqBase {
     public static readonly DISCOVERYITEMS_XMLNS = 'http://jabber.org/protocol/disco#items';
 
     public createResponse(response: DiscoveryItemsResponse): XMLWriter {
-        return XMLWriter.create('iq')
-            .attr('type', 'result')
-            .attr('id', response.id)
+        return this.createIq(response.id, 'result')
             .attr('to', response.to)
             .attr('from', response.from)
             .element(XMLWriter.create('query')
