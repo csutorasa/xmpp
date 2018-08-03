@@ -20,6 +20,7 @@ export class PlainAuthHandler extends Handler {
         const auth = reader.getElement('auth');
         console.log('auth', auth.getContent());
         var buf = Buffer.from(auth.getContent(), 'base64');
+        var authenticated: boolean = false;
         if(buf.indexOf("\x00",0) == 0)
         {
             var idx: number = buf.indexOf("\x00",1);
@@ -27,22 +28,46 @@ export class PlainAuthHandler extends Handler {
             {
                 var bufUser = buf.slice(1, idx);
                 var user: string = bufUser.toString();
-                client.username = user;
-                console.log('auth-user:', user);
                 var bufPw = buf.slice(idx);
                 var pw: string = bufPw.toString();
+                console.log('auth-user:', user);
                 console.log('auth-pw:', pw);
-                if(pw.localeCompare("password") == 0)
-                {
-                    client.state = ClientState.Authenticated;
-                }
+
+                authenticated = this.authenticate(user, pw);
             }
         }
         else{
             console.log('auth', 'Invalid PLAIN format');
         }
+
+        if(authenticated)
+        {
+            client.username = user;
+            client.state = ClientState.Authenticated;
         
-        const success = XMLWriter.create().element('success', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl'));
-        client.writeXML(success);
+            const success = XMLWriter.create().element('success', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl'));
+            client.writeXML(success);
+        }
+        else{
+            const failure = XMLWriter.create()
+                .element('failure', XMLWriter.create().xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl')
+                    .element('invalid-authzid',XMLWriter.create()));
+            client.writeXML(failure);
+            if(client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting)
+            {
+                const stream: Stream = new Stream();
+                const close: string = stream.createCloseStreamMessage();
+                client.writeString(close);
+            }
+            if(client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting)
+            {
+                client.close();
+            }
+        }
+    }
+
+    private authenticate(user: string, pw: string): boolean
+    {
+        return pw.localeCompare("password") == 0;
     }
 }
