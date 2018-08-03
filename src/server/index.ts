@@ -7,6 +7,8 @@ import { NonSASLAuthenticationHandler } from "./xmpp/xep/0078/NonSASLAuthenticat
 import { PlainAuthHandler } from "./xmpp/auth/PlainAuthHandler";
 import { BindHandler } from "./xmpp/iq/BindHandler";
 import { SessionHandler } from "./xmpp/iq/SessionHandler";
+import { DiscoveryInfoHandler } from "./xmpp/iq/xep-0030/DiscoveryInfoHandler";
+import { DiscoveryItemsHandler } from "./xmpp/iq/xep-0030/DiscoveryItemsHandler";
 
 const server = new XMPPServer()
 
@@ -19,6 +21,8 @@ server
     .addHandler(new PlainAuthHandler())
     .addHandler(new BindHandler())
     .addHandler(new SessionHandler())
+    .addHandler(new DiscoveryInfoHandler())
+    .addHandler(new DiscoveryItemsHandler())
     .addHandler(new NonSASLAuthenticationHandler())
 
 server.start().then(() => {

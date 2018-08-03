@@ -4,12 +4,10 @@ import { JID, JIDHelper } from '../util/jid';
 import { IqRequest, IqResponse, IqBase } from './IqBase';
 
 export interface BindRequest extends IqRequest {
-    id: string;
     resource?: string;
 }
 
 export interface BindResponse extends IqResponse {
-    id: string;
     jid: JID;
 }
 
@@ -24,7 +22,7 @@ export class Bind extends IqBase {
                 .attr('id', response.id)
                 .attr('to', response.jid.host + '/' + response.jid.resource)
                 .element('bind', XMLWriter.create()
-                    .xmlns('', 'urn:ietf:params:xml:ns:xmpp-bind')
+                    .xmlns('', Bind.BIND_XMLNS)
                     .element('jid', XMLWriter.create().text(JIDHelper.toString(response.jid)))
                 )
             )

@@ -1,6 +1,9 @@
 export * from './iq/Bind';
 export * from './iq/Session';
 
+export * from './iq/xep-0030/DiscoveryInfo';
+export * from './iq/xep-0030/DiscoveryItems';
+
 export * from './stream/Features';
 export * from './stream/Stream';
 

@@ -4,11 +4,9 @@ import { JID, JIDHelper } from '../util/jid';
 import { IqBase, IqResponse, IqRequest } from './IqBase';
 
 export interface SessionRequest extends IqRequest {
-    id: string;
 }
 
 export interface SessionResponse extends IqResponse {
-    id: string;
     host: string;
 }
 
