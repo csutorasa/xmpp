@@ -1,7 +1,7 @@
 import { Handler } from "./Handler";
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType } from "../../../library";
+import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType, XMLWriter, ErrorStanza } from "../../../library";
 
 export class HandlerChain {
 
@@ -31,11 +31,19 @@ export class HandlerChain {
                 if (reader) {
                     if (this.isIq(reader)) {
                         const iqSupported = this.handlers.filter(h => this.isIqSupported(h, server, client, reader));
+                        XMLEventHelper.processTag(events);
                         if (iqSupported.length > 0) {
-                            XMLEventHelper.processTag(events);
                             iqSupported.forEach(h => h.handleIq(server, client, reader));
                         } else {
-                            // TODO
+                            client.writeXML(XMLWriter.create('iq')
+                                .attr('type', 'error')
+                                .attr('from', server.hostname)
+                                .attr('to', client.jid.stringify())
+                                .attr('id', reader.getElement('iq').getAttr('id'))
+                                .element(
+                                    ErrorStanza.internalServerError()
+                                )
+                            )
                         }
                     } else {
                         const supported = this.handlers.filter(h => this.isSupported(h, server, client, reader));

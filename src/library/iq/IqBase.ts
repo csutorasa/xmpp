@@ -9,12 +9,13 @@ export interface IqResponse {
     id: string;
 }
 
-export type IqRequestType = 'get' | 'set'
+export type IqRequestType = 'get' | 'set';
+export type IqResponseType = 'result' | 'error';
 
 export abstract class IqBase {
     protected isIq(request: XMLReader, type: IqRequestType, element?: string, namespace?: string): boolean {
         const iq = request.getElement('iq');
-        return iq != null && iq.getAttr('type') === type && ((element == null ||
+        return iq.getAttr('type') === type && ((element == null ||
             (iq.getElement(element) != null && (namespace == null || iq.getElement(element).getXmlns('') === namespace)))
         );
     }
@@ -28,7 +29,7 @@ export abstract class IqBase {
         return request.getElement('iq').getAttr('id');
     }
 
-    protected createIq(id: string, type: 'result' | 'error'): XMLWriter {
+    protected createIq(id: string, type: IqResponseType): XMLWriter {
         return XMLWriter.create('iq')
             .attr('type', type)
             .attr('id', id)

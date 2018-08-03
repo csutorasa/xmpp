@@ -1,9 +1,11 @@
 import { XMLWriter } from "../xml/XMLWriter";
 
+export type ErrorType = 'auth' | 'cancel' | 'continue' | 'modify' | 'wait';
+
 export class ErrorStanza {
     public static readonly XMPPSTANZAS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 
-    protected static createError(type: 'auth' | 'cancel' | 'continue' | 'modify' | 'wait'): XMLWriter {
+    protected static createError(type: ErrorType): XMLWriter {
         return XMLWriter.create('error')
             .attr('type', type);
     }
