@@ -58,11 +58,11 @@ export class XMLWriter {
     }
 
     public getElement(name: string): XMLWriter {
-        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name][0] : null;
+        return this.elements.find(e => e.name === name);
     }
 
-    public getElements(name: string): XMLWriter[] {
-        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name] : [];
+    public getElements(): XMLWriter[] {
+        return this.elements;
     }
 
     public element(...element: XMLWriter[]): XMLWriter {

@@ -4,6 +4,8 @@ export * from './iq/Session';
 export * from './iq/xep-0030/DiscoveryInfo';
 export * from './iq/xep-0030/DiscoveryItems';
 
+export * from './stanza/ErrorStanza';
+
 export * from './stream/Features';
 export * from './stream/Stream';
 
