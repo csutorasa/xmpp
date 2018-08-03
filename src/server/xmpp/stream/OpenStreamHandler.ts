@@ -2,6 +2,7 @@ import { Stream, XMLEvent, XMLEventHelper, Features } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
+import { JID } from "../../../library/util/jid";
 
 
 export class OpenStreamHandler extends Handler {
@@ -19,6 +20,7 @@ export class OpenStreamHandler extends Handler {
             to: request.from,
         });
         if(client.state === ClientState.Connecting) {
+            client.jid = new JID(server.hostname);
             client.writeString(openStream);
             client.writeXML(this.features.createFeaturesMessage({
                 features: server.authfeatures

@@ -2,7 +2,6 @@ import { XMLReader, DiscoveryInfo, DiscoveryItems } from "../../../../library";
 import { ClientContext } from "../../context/ClientContext";
 import { Handler } from "../../handler/Handler";
 import { ServerContext } from "../../context/ServerContext";
-import { JIDHelper } from "../../../../library/util/jid";
 
 export class DiscoveryItemsHandler extends Handler {
 
@@ -22,7 +21,7 @@ export class DiscoveryItemsHandler extends Handler {
         client.writeXML(this.discoveryItems.createResponse({
             id: request.id,
             from: server.hostname,
-            to: JIDHelper.toString({ host: server.hostname, name: client.username, resource: client.resource }),
+            to: client.jid.stringify(),
             items: [],
         }));
     }

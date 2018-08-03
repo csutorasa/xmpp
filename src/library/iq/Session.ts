@@ -1,6 +1,5 @@
 import { XMLWriter } from '../xml/XMLWriter';
 import { XMLReader } from '../xml/XMLReader';
-import { JID, JIDHelper } from '../util/jid';
 import { IqBase, IqResponse, IqRequest } from './IqBase';
 
 export interface SessionRequest extends IqRequest {

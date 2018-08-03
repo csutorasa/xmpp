@@ -1,4 +1,5 @@
 import { XMLWriter } from "../../../library";
+import { JID } from "../../../library/util/jid";
 
 export enum ClientState {
     Connecting,
@@ -11,8 +12,7 @@ export enum ClientState {
 
 export interface ClientContext {
     state: ClientState;
-    username?: string;
-    resource?: string;
+    jid?: JID;
     writeString: (response: string) => void;
     writeXML: (response: XMLWriter) => void;
     close: () => void;

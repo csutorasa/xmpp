@@ -1,6 +1,6 @@
 import { XMLWriter } from '../xml/XMLWriter';
 import { XMLReader } from '../xml/XMLReader';
-import { JID, JIDHelper } from '../util/jid';
+import { JID } from '../util/jid';
 import { IqRequest, IqResponse, IqBase } from './IqBase';
 
 export interface BindRequest extends IqRequest {
@@ -22,7 +22,7 @@ export class Bind extends IqBase {
             .attr('to', response.jid.host + '/' + response.jid.resource)
             .element(XMLWriter.create('bind')
                 .xmlns('', Bind.BIND_XMLNS)
-                .element(XMLWriter.create('jid').text(JIDHelper.toString(response.jid)))
+                .element(XMLWriter.create('jid').text(response.jid.stringify()))
             )
     }
 

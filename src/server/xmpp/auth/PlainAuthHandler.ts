@@ -40,7 +40,7 @@ export class PlainAuthHandler extends Handler {
         }
 
         if (authenticated) {
-            client.username = user;
+            client.jid.name = user;
             client.state = ClientState.Authenticated;
 
             const success = XMLWriter.create('success').xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl');

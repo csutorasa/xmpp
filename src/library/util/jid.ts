@@ -1,19 +1,17 @@
-export interface JID {
-    name: string;
-    host: string;
-    resource: string;
-}
+export class JID {
+    public constructor(public host: string, public name?: string, public resource?: string) {
 
-export class JIDHelper {
-    public static toString(jid: JID): string {
-        if(jid.name) {
-            if(jid.resource) {
-                return jid.name + '@' + jid.host + '/' + jid.resource;
+    }
+
+    public stringify(): string {
+        if (this.name) {
+            if (this.resource) {
+                return this.name + '@' + this.host + '/' + this.resource;
             } else {
-                return jid.name + '@' + jid.host;
+                return this.name + '@' + this.host;
             }
         } else {
-            return jid.host + '/' + jid.resource;
+            return this.host + '/' + this.resource;
         }
     }
 
@@ -21,11 +19,7 @@ export class JIDHelper {
         const at = data.split('@');
         const name = at.length > 1 ? at.shift() : null;
         const slash = at.join('@').split('/');
-        const host = slash.length > 1 ? slash.shift(): null;
-        return {
-            name: name,
-            host: host,
-            resource: slash.join('/')
-        };
+        const host = slash.length > 1 ? slash.shift() : null;
+        return new JID(name, host,slash.join('/'));
     }
 }

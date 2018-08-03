@@ -10,7 +10,7 @@ export class XMLReader {
             encoding?: 'utf-8' | string
             standalone?: 'yes' | 'no'
         }
-    } = null;
+    };
     protected content: string | number | boolean;
     protected isCdata: boolean = false;
     protected elements: { [key: string]: XMLReader[] } = {};

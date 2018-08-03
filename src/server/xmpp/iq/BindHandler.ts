@@ -18,15 +18,11 @@ export class BindHandler extends Handler {
 
     public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
         const request = this.bind.readRequest(reader);
-        client.resource = request.resource ? request.resource : 'randomresource';
+        client.jid.resource = request.resource ? request.resource : 'randomresource';
 
         client.writeXML(this.bind.createResponse({
             id: request.id,
-            jid: {
-                host: server.hostname,
-                name: client.username,
-                resource: client.resource,
-            }
+            jid: client.jid
         }));
     }
 }
