@@ -29,7 +29,7 @@ server.start().then(() => {
     console.log('Server started');
 });
 
-/*import { XMLReader, XMLStreamReader } from "../library";
+/*import { XML, XMLStreamReader } from "../library";
 const reader = new XMLStreamReader();
 reader.append('<test asd="dsa"></test>')
 console.log(reader.getContent());*/

@@ -1,4 +1,4 @@
-import { XMLWriter } from '../xml/XMLWriter';
+import { XML } from '../xml/XML';
 import { XMLEvent } from '../xml/XMLEvent';
 import { XMLEventHelper } from '../xml/XMLEventHelper';
 
@@ -24,7 +24,7 @@ export class Stream {
     public static readonly REGISTER_XMLNS = 'http://jabber.org/features/iq-register';
 
     public createOpenStreamMessage(response: StreamResponse): string {
-        return XMLWriter.create('stream:stream', true)
+        return XML.create('stream:stream', true)
             .text('')
             .xmlns('', Stream.JABBER_XMLNS)
             .xmlns('stream', Stream.STREAM_XMLNS)

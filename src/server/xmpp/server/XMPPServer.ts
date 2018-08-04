@@ -3,7 +3,7 @@ import { ServerContext } from "../context/ServerContext";
 import { ClientContext } from "../context/ClientContext";
 import { HandlerChain } from "../handler/HandlerChain";
 import { Handler } from "../handler/Handler";
-import { XMLWriter, XMLEvent, Logger, LoggerFactory } from "../../../library";
+import { XML, XMLEvent, Logger, LoggerFactory } from "../../../library";
 
 export class XMPPServer extends AbstractServer {
 
@@ -15,9 +15,9 @@ export class XMPPServer extends AbstractServer {
 
     public constructor() {
         super();
-        this.context.hostname = 'arminpc';
-        this.context.sessionFeatures = XMLWriter.create('stream:features');
-        this.context.authFeatures = XMLWriter.create('stream:features');
+        this.context.hostname = 'localhost';
+        this.context.sessionFeatures = XML.create('stream:features');
+        this.context.authFeatures = XML.create('stream:features');
     }
 
     public registerServer(server: AbstractServer): XMPPServer {

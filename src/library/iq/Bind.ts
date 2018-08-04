@@ -1,5 +1,4 @@
-import { XMLWriter } from '../xml/XMLWriter';
-import { XMLReader } from '../xml/XMLReader';
+import { XML } from '../xml/XML';
 import { JID } from '../util/jid';
 import { IqRequest, IqResponse, IqBase } from './IqBase';
 
@@ -15,19 +14,19 @@ export class Bind extends IqBase {
 
     public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
 
-    public createResponse(response: BindResponse): XMLWriter {
+    public createResponse(response: BindResponse): XML {
         return this.createIq(response.id, 'result')
-            .element(XMLWriter.create('bind')
+            .element(XML.create('bind')
                 .xmlns('', Bind.BIND_XMLNS)
-                .element(XMLWriter.create('jid').text(response.jid.stringify()))
+                .element(XML.create('jid').text(response.jid.stringify()))
             )
     }
 
-    public isRequest(request: XMLReader): boolean {
+    public isRequest(request: XML): boolean {
         return this.isIq(request, 'set', 'bind', Bind.BIND_XMLNS);
     }
 
-    public readRequest(request: XMLReader): BindRequest {
+    public readRequest(request: XML): BindRequest {
         const bind = request.getElement('bind');
         const resource = bind.getElement('resource') != null ? bind.getElement('resource').getContent() : null;
         return {

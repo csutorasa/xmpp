@@ -1,4 +1,4 @@
-import { Stream, XMLWriter, XMLReader } from "../../../library";
+import { Stream, XML } from "../../../library";
 import { ClientContext, ClientState } from "../context/ClientContext";
 import { Handler } from "../handler/Handler";
 import { ServerContext } from "../context/ServerContext";
@@ -6,17 +6,17 @@ import { ServerContext } from "../context/ServerContext";
 
 export class PlainAuthHandler extends Handler {
     public init(context: ServerContext): void {
-        context.authFeatures.element(XMLWriter.create('mechanisms')
+        context.authFeatures.element(XML.create('mechanisms')
             .xmlns('', Stream.MECHANISMS_XMLNS)
-            .element(XMLWriter.create('mechanism').text('PLAIN'))
+            .element(XML.create('mechanism').text('PLAIN'))
         )
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+    public isSupported(server: ServerContext, client: ClientContext, reader: XML): boolean {
         return reader.getName() == 'auth' && reader.getAttr('mechanism') === 'PLAIN';
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+    public handle(server: ServerContext, client: ClientContext, reader: XML): void {
         const buf = Buffer.from(reader.getContent(), 'base64');
         let authenticated: boolean = false;
         let user: string;
@@ -42,13 +42,13 @@ export class PlainAuthHandler extends Handler {
             client.jid.name = user;
             client.state = ClientState.Authenticated;
 
-            const success = XMLWriter.create('success').xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl');
+            const success = XML.create('success').xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl');
             client.writeXML(success);
         }
         else {
-            const failure = XMLWriter.create('failure')
+            const failure = XML.create('failure')
                 .xmlns('', 'urn:ietf:params:xml:ns:xmpp-sasl')
-                .element(XMLWriter.create('invalid-authzid'));
+                .element(XML.create('invalid-authzid'));
             client.writeXML(failure);
             if (client.state != ClientState.Disconnected && client.state != ClientState.Disconnecting) {
                 const stream: Stream = new Stream();

@@ -1,6 +1,6 @@
 import * as net from 'net';
 import { AbstractServer } from './AbstractServer';
-import { XMLWriter, XMLStreamReader, Logger, LoggerFactory } from '../../../library';
+import { XML, XMLStreamReader, Logger, LoggerFactory } from '../../../library';
 import { ClientContext, ClientState } from '../context/ClientContext';
 
 export class TcpServer extends AbstractServer {
@@ -40,7 +40,7 @@ export class TcpServer extends AbstractServer {
     protected onNewClient(socket: net.Socket) {
         const context: ClientContext = {
             state: ClientState.Connecting,
-            writeXML: (res: XMLWriter) => { this.writeXML(socket, context, res); },
+            writeXML: (res: XML) => { this.writeXML(socket, context, res); },
             writeString: (res: string) => { this.write(socket, context, res); },
             close: () => this.closeClient(socket),
         };
@@ -70,7 +70,7 @@ export class TcpServer extends AbstractServer {
         });
     }
 
-    protected writeXML(socket: net.Socket, context: ClientContext, data: XMLWriter): Promise<any> {
+    protected writeXML(socket: net.Socket, context: ClientContext, data: XML): Promise<any> {
         TcpServer.log.info(() => 'Sent ' + data.toReadableString());
         return this.write(socket, context, data.toXML());
     }

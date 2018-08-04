@@ -1,7 +1,7 @@
 import { Handler } from "./Handler";
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType, XMLWriter, ErrorStanza, Logger, LoggerFactory } from "../../../library";
+import { XMLEvent, XMLEventHelper, XML, IqRequestType, ErrorStanza, Logger, LoggerFactory } from "../../../library";
 
 export class HandlerChain {
 
@@ -24,7 +24,7 @@ export class HandlerChain {
                 const event: XMLEvent = XMLEventHelper.processFirst(events);
                 singleSupported.forEach(h => h.handleSingle(server, client, event));
             } else {
-                const reader: XMLReader = XMLEventHelper.getTag(events);
+                const reader: XML = XMLEventHelper.getTag(events);
                 if (reader) {
                     if (this.isIq(reader)) {
                         const iqSupported = this.handlers.filter(h => this.isIqSupported(h, server, client, reader));
@@ -34,7 +34,7 @@ export class HandlerChain {
                             iqSupported.forEach(h => h.handleIq(server, client, reader));
                         } else {
                             HandlerChain.log.warn(() => 'Unprocessable ' + reader.toReadableString());
-                            client.writeXML(XMLWriter.create('iq')
+                            client.writeXML(XML.create('iq')
                                 .attr('type', 'error')
                                 .attr('from', server.hostname)
                                 .attr('to', client.jid.stringify())
@@ -68,11 +68,11 @@ export class HandlerChain {
         }
     }
 
-    protected isIq(reader: XMLReader): boolean {
+    protected isIq(reader: XML): boolean {
         return reader.getName() === 'iq' && (reader.getAttr('type') == 'set' || reader.getAttr('type') === 'get');
     }
 
-    protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+    protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XML): boolean {
         try {
             return handler.isIqSupported(server, client, <IqRequestType>reader.getAttr('type'), reader);
         } catch(e) {
@@ -81,7 +81,7 @@ export class HandlerChain {
         }
     }
 
-    protected isSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+    protected isSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XML): boolean {
         try {
             return handler.isSupported(server, client, reader);
         } catch(e) {

@@ -1,5 +1,4 @@
-import { XMLWriter } from '../../xml/XMLWriter';
-import { XMLReader } from '../../xml/XMLReader';
+import { XML } from '../../xml/XML';
 import { IqRequest, IqResponse, IqBase } from '../IqBase';
 import { ErrorStanza } from '../../stanza/ErrorStanza';
 
@@ -29,30 +28,30 @@ export class DiscoveryInfo extends IqBase {
 
     public static readonly DISCOVERYINFO_XMLNS = 'http://jabber.org/protocol/disco#info';
 
-    public createResponse(response: DiscoveryInfoResponse): XMLWriter {
+    public createResponse(response: DiscoveryInfoResponse): XML {
         return this.createIq(response.id, 'result')
                 .attr('to', response.to)
                 .attr('from', response.from)
-                .element(XMLWriter.create('query')
+                .element(XML.create('query')
                     .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS)
                 )
     }
 
-    public createError(response: DiscoveryInfoResponse): XMLWriter {
+    public createError(response: DiscoveryInfoResponse): XML {
         return this.createIq(response.id, 'error')
             .attr('to', response.to)
             .attr('from', response.from)
-            .element(XMLWriter.create('query')
+            .element(XML.create('query')
                 .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS)
             )
             .element(ErrorStanza.itemNotFound())
     }
 
-    public isRequest(request: XMLReader): boolean {
+    public isRequest(request: XML): boolean {
         return this.isIq(request, 'get', 'query', DiscoveryInfo.DISCOVERYINFO_XMLNS);
     }
 
-    public readRequest(request: XMLReader): DiscoveryInfoRequest {
+    public readRequest(request: XML): DiscoveryInfoRequest {
         return {
             id: this.readId(request),
         };

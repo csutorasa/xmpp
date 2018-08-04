@@ -1,6 +1,6 @@
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent, XMLReader, IqRequestType } from "../../../library";
+import { XMLEvent, XML, IqRequestType } from "../../../library";
 
 export abstract class Handler {
 
@@ -12,11 +12,11 @@ export abstract class Handler {
         return false;
     }
 
-    public isIqSupported(server: ServerContext, client: ClientContext, type: IqRequestType, reader: XMLReader): boolean {
+    public isIqSupported(server: ServerContext, client: ClientContext, type: IqRequestType, reader: XML): boolean {
         return false;
     }
 
-    public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
+    public isSupported(server: ServerContext, client: ClientContext, reader: XML): boolean {
         return false;
     }
 
@@ -24,11 +24,11 @@ export abstract class Handler {
 
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
         
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
+    public handle(server: ServerContext, client: ClientContext, reader: XML): void {
 
     }
 }

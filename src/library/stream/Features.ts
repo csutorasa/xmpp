@@ -1,9 +1,9 @@
-import { XMLWriter } from '../xml/XMLWriter';
+import { XML } from '../xml/XML';
 import { XMLEvent } from '../xml/XMLEvent';
 import { XMLEventHelper } from '../xml/XMLEventHelper';
 
 export interface FeaturesResponse {
-    features: XMLWriter;
+    features: XML;
 }
 
 export class Features {
@@ -15,15 +15,15 @@ export class Features {
     public static readonly BIND_XMLNS = 'urn:ietf:params:xml:ns:xmpp-bind';
     public static readonly SESSION_XMLNS = 'urn:ietf:params:xml:ns:xmpp-session';
 
-    public createFeaturesMessage(response: FeaturesResponse): XMLWriter {
+    public createFeaturesMessage(response: FeaturesResponse): XML {
         return response.features
-            /*.element('mechanisms', XMLWriter.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
-                .element('mechanism', XMLWriter.create().text('PLAIN'), XMLWriter.create().text('SCRAM-SHA-1'), XMLWriter.create().text('CRAM-MD5'), XMLWriter.create().text('DIGEST-MD5'),)
+            /*.element('mechanisms', XML.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
+                .element('mechanism', XML.create().text('PLAIN'), XML.create().text('SCRAM-SHA-1'), XML.create().text('CRAM-MD5'), XML.create().text('DIGEST-MD5'),)
             )
-            .element('compression', XMLWriter.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
-                .element('method', XMLWriter.create().text('zlib'))
+            .element('compression', XML.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
+                .element('method', XML.create().text('zlib'))
             )
-            .element('ver', XMLWriter.create().xmlns('', XMLStream.VER_XMLNS))
-            .element('register', XMLWriter.create().xmlns('', XMLStream.REGISTER_XMLNS))*/
+            .element('ver', XML.create().xmlns('', XMLStream.VER_XMLNS))
+            .element('register', XML.create().xmlns('', XMLStream.REGISTER_XMLNS))*/
     }
 }

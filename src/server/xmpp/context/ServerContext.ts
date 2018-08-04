@@ -1,7 +1,7 @@
-import { XMLWriter } from "../../../library";
+import { XML } from "../../../library";
 
 export interface ServerContext {
     hostname?: string;
-    sessionFeatures?: XMLWriter;
-    authFeatures?: XMLWriter;
+    sessionFeatures?: XML;
+    authFeatures?: XML;
 }

@@ -1,191 +1,191 @@
-import { XMLWriter } from "../xml/XMLWriter";
+import { XML } from "../xml/XML";
 
 export type ErrorType = 'auth' | 'cancel' | 'continue' | 'modify' | 'wait';
 
 export class ErrorStanza {
     public static readonly XMPPSTANZAS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 
-    protected static createError(type: ErrorType): XMLWriter {
-        return XMLWriter.create('error')
+    protected static createError(type: ErrorType): XML {
+        return XML.create('error')
             .attr('type', type);
     }
 
-    public static badRequest(): XMLWriter {
+    public static badRequest(): XML {
         return ErrorStanza.createError('modify')
             .element(
-                XMLWriter.create('bad-request')
+                XML.create('bad-request')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static conflict(): XMLWriter {
+    public static conflict(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('conflict')
+                XML.create('conflict')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static featureNotImplemented(): XMLWriter {
+    public static featureNotImplemented(): XML {
         return ErrorStanza.createError('cancel') // or modify
             .element(
-                XMLWriter.create('feature-not-implemented')
+                XML.create('feature-not-implemented')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static forbidden(): XMLWriter {
+    public static forbidden(): XML {
         return ErrorStanza.createError('auth')
             .element(
-                XMLWriter.create('forbidden')
+                XML.create('forbidden')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static gone(by: string, uri: string): XMLWriter {
+    public static gone(by: string, uri: string): XML {
         return ErrorStanza.createError('cancel')
             .attr('by', by)
             .element(
-                XMLWriter.create('gone')
+                XML.create('gone')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
                     .text(uri)
             );
     }
 
-    public static internalServerError(): XMLWriter {
+    public static internalServerError(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('internal-server-error')
+                XML.create('internal-server-error')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static itemNotFound(): XMLWriter {
+    public static itemNotFound(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('item-not-found')
+                XML.create('item-not-found')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static jidMalformed(by: string): XMLWriter {
+    public static jidMalformed(by: string): XML {
         return ErrorStanza.createError('auth')
             .attr('by', by)
             .element(
-                XMLWriter.create('jid-malformed')
+                XML.create('jid-malformed')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static notAcceptable(): XMLWriter {
+    public static notAcceptable(): XML {
         return ErrorStanza.createError('modify')
             .element(
-                XMLWriter.create('not-acceptable')
+                XML.create('not-acceptable')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static notAllowed(): XMLWriter {
+    public static notAllowed(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('not-allowed')
+                XML.create('not-allowed')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static notAuthorized(): XMLWriter {
+    public static notAuthorized(): XML {
         return ErrorStanza.createError('auth')
             .element(
-                XMLWriter.create('not-authorized')
+                XML.create('not-authorized')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static policyViolation(by: string): XMLWriter {
+    public static policyViolation(by: string): XML {
         return ErrorStanza.createError('auth')
             .attr('by', by)
             .element(
-                XMLWriter.create('policy-violation')
+                XML.create('policy-violation')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static recipientUnavailable(): XMLWriter {
+    public static recipientUnavailable(): XML {
         return ErrorStanza.createError('wait')
             .element(
-                XMLWriter.create('recipient-unavailable')
+                XML.create('recipient-unavailable')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static redirect(): XMLWriter {
+    public static redirect(): XML {
         return ErrorStanza.createError('modify')
             .element(
-                XMLWriter.create('redirect')
+                XML.create('redirect')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static registrationRequired(): XMLWriter {
+    public static registrationRequired(): XML {
         return ErrorStanza.createError('auth')
             .element(
-                XMLWriter.create('registration-required')
+                XML.create('registration-required')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static remoteServerNotFound(): XMLWriter {
+    public static remoteServerNotFound(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('remote-server-not-found')
+                XML.create('remote-server-not-found')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static remoteServerTimeout(): XMLWriter {
+    public static remoteServerTimeout(): XML {
         return ErrorStanza.createError('wait')
             .element(
-                XMLWriter.create('remote-server-timeout')
+                XML.create('remote-server-timeout')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static resourceConstraint(): XMLWriter {
+    public static resourceConstraint(): XML {
         return ErrorStanza.createError('wait')
             .element(
-                XMLWriter.create('resource-constraint')
+                XML.create('resource-constraint')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static serviceUnavailable(): XMLWriter {
+    public static serviceUnavailable(): XML {
         return ErrorStanza.createError('cancel')
             .element(
-                XMLWriter.create('service-unavailable')
+                XML.create('service-unavailable')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static subscriptionRequired(): XMLWriter {
+    public static subscriptionRequired(): XML {
         return ErrorStanza.createError('auth')
             .element(
-                XMLWriter.create('subscription-required')
+                XML.create('subscription-required')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static undefinedCondition(): XMLWriter {
+    public static undefinedCondition(): XML {
         return ErrorStanza.createError('modify')
             .element(
-                XMLWriter.create('undefined-condition')
+                XML.create('undefined-condition')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }
 
-    public static unexpectedRequest(): XMLWriter {
+    public static unexpectedRequest(): XML {
         return ErrorStanza.createError('wait') // modify
             .element(
-                XMLWriter.create('unexpected-request')
+                XML.create('unexpected-request')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
             );
     }

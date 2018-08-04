@@ -1,10 +1,10 @@
-import { XMLReader } from "./XMLReader";
+import { XML } from "./XML";
 
 export class XMLEventChecker {
 
     protected value: boolean = true;
     
-    public constructor(protected reader: XMLReader) {
+    public constructor(protected reader: XML) {
 
     }
 

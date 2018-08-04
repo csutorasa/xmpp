@@ -1,5 +1,5 @@
 import { XMLEvent } from "./XMLEvent";
-import { XMLReader } from "./XMLReader";
+import { XML } from "./XML";
 
 export class XMLEventHelper {
 
@@ -22,7 +22,7 @@ export class XMLEventHelper {
         return this.has(events, 'close', open.name);
     }
 
-    public static getTag(events: XMLEvent[]): XMLReader {
+    public static getTag(events: XMLEvent[]): XML {
         if (events.length < 2) {
             return undefined;
         }
@@ -31,14 +31,14 @@ export class XMLEventHelper {
         if (close === -1) {
             return undefined;
         }
-        return XMLReader.fromEvents(events.slice(0, close + 1))[0];
+        return XML.fromEvents(events.slice(0, close + 1))[0];
     }
 
     public static processFirst(events: XMLEvent[]): XMLEvent {
         return events.shift();
     }
 
-    public static processTag(events: XMLEvent[]): XMLReader {
+    public static processTag(events: XMLEvent[]): XML {
         if (events.length < 2) {
             return undefined;
         }
@@ -47,6 +47,6 @@ export class XMLEventHelper {
         if (close === -1) {
             return undefined;
         }
-        return XMLReader.fromEvents(events.splice(0, close + 1))[0];
+        return XML.fromEvents(events.splice(0, close + 1))[0];
     }
 }
