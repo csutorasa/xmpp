@@ -1,11 +1,12 @@
 import * as net from 'net';
 import { AbstractServer } from './AbstractServer';
-import { XMLWriter, XMLStreamReader } from '../../../library';
+import { XMLWriter, XMLStreamReader, Logger, LoggerFactory } from '../../../library';
 import { ClientContext, ClientState } from '../context/ClientContext';
 
 export class TcpServer extends AbstractServer {
 
     protected server: net.Server;
+    private static readonly log: Logger = LoggerFactory.create(TcpServer);
 
     public constructor(protected port: number = 5222) {
         super();
@@ -39,7 +40,7 @@ export class TcpServer extends AbstractServer {
     protected onNewClient(socket: net.Socket) {
         const context: ClientContext = {
             state: ClientState.Connecting,
-            writeXML: (res: XMLWriter) => { this.write(socket, context, res.toXML()); },
+            writeXML: (res: XMLWriter) => { this.writeXML(socket, context, res); },
             writeString: (res: string) => { this.write(socket, context, res); },
             close: () => this.closeClient(socket),
         };
@@ -67,6 +68,11 @@ export class TcpServer extends AbstractServer {
         socket.on('end', err => {
             context.state = ClientState.Disconnected;
         });
+    }
+
+    protected writeXML(socket: net.Socket, context: ClientContext, data: XMLWriter): Promise<any> {
+        TcpServer.log.info(() => 'Sent ' + data.toReadableString());
+        return this.write(socket, context, data.toXML());
     }
 
     protected write(socket: net.Socket, context: ClientContext, data: string): Promise<any> {

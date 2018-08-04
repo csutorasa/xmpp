@@ -13,7 +13,11 @@ export class XMLReader {
     };
     protected content: string | number | boolean;
     protected isCdata: boolean = false;
-    protected elements: { [key: string]: XMLReader[] } = {};
+    protected elements: XMLReader[] = [];
+
+    public constructor(protected name: string) {
+
+    }
 
     public static fromXML(xml: string): XMLReader {
         return this.fromElement(<Element>xml2js(xml, { alwaysArray: true }));
@@ -23,8 +27,9 @@ export class XMLReader {
         return this.fromXML(xml.replace(/>$/, "/>"));
     }
 
-    public static fromEvents(events: XMLEvent[]): XMLReader {
-        const reader = new XMLReader();
+    public static fromEvents(events: XMLEvent[], parent: XMLReader = null): XMLReader[] {
+        const readers: XMLReader[] = [];
+        let lastReader: XMLReader;
         const processableEvents = events.filter(e => e.type !== 'instruction' || e.name === 'xml');
         while (processableEvents.length !== 0) {
             const event = processableEvents[0];
@@ -33,27 +38,25 @@ export class XMLReader {
                 if(to === -1) {
                     throw new Error('Cannot find closing tag for ' + event.name);
                 }
-                if(!reader.elements[event.name]) {
-                    reader.elements[event.name] = []
-                }
+                lastReader = new XMLReader(event.name);
+                Object.assign(lastReader.attributes, event.attributes);
                 const innerEvents = processableEvents.splice(0, to + 1);
-                const newElement = this.fromEvents(innerEvents.slice(1, -1));
-                newElement.attributes = {}
-                Object.assign(newElement.attributes, event.attributes);
-                reader.elements[event.name].push(newElement);
+                const newElements = this.fromEvents(innerEvents.slice(1, -1), lastReader);
+                lastReader.elements.push(...newElements);
+                readers.push(lastReader);
             } else if (event.type === 'data') {
-                reader.content = event.data;
+                parent.content = event.data;
                 processableEvents.shift();
             } else if (event.type === 'instruction') {
                 if (event.attributes.version || event.attributes.encoding) {
-                    if (!reader.attributes) {
-                        reader.declaration = {};
+                    if (!lastReader.attributes) {
+                        lastReader.declaration = {};
                     }
                     if (event.attributes.version) {
-                        reader.declaration.attributes.version = event.attributes.version;
+                        lastReader.declaration.attributes.version = event.attributes.version;
                     }
                     if (event.attributes.encoding) {
-                        reader.declaration.attributes.encoding = event.attributes.encoding;
+                        lastReader.declaration.attributes.encoding = event.attributes.encoding;
                     }
                 }
                 processableEvents.shift();
@@ -61,7 +64,11 @@ export class XMLReader {
                 throw new Error('Invalid event ' + event.type);
             }
         }
-        return reader;
+        return readers;
+    }
+
+    public getName(): string {
+        return this.name;
     }
 
     public getAttr(key: string): string {
@@ -81,15 +88,15 @@ export class XMLReader {
     }
 
     public getElement(name: string): XMLReader {
-        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name][0] : null;
+        return this.elements.find(e => e.name === name);
     }
 
-    public getElements(name: string): XMLReader[] {
-        return this.elements[name] && this.elements[name].length > 0 ? this.elements[name] : [];
+    public getElements(): XMLReader[] {
+        return this.elements;
     }
 
     protected static fromElement(element: Element): XMLReader {
-        const reader = new XMLReader();
+        const reader = new XMLReader(element.name);
         if (element.declaration) {
             reader.declaration = {
                 attributes: {}
@@ -113,14 +120,19 @@ export class XMLReader {
                 }
             }
             for (let elem of elementChildren) {
-                if (!reader.elements[elem.name]) {
-                    reader.elements[elem.name] = []
-                }
-                reader.elements[elem.name].push(this.fromElement(elem));
+                reader.elements.push(this.fromElement(elem));
             }
         }
         return reader;
     }
+
+    public toReadableString(): string {
+        const attr = Object.keys(this.attributes).length > 0 ? (' {' + Object.keys(this.attributes).map(a => a + ': ' + this.attributes[a]).join(', ') + '}') : '';
+        const elements = this.elements.length > 0 ? " [" + this.elements.map(e => '\n' + e.toReadableString()).join('').split('\n').join('\n  ') + "\n]" : '';
+        return [
+            this.name,
+            attr,
+            elements,
+        ].join('');
+    }
 }
-
-

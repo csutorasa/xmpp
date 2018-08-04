@@ -1,15 +1,12 @@
 import { Handler } from "./Handler";
 import { ClientContext } from "../context/ClientContext";
 import { ServerContext } from "../context/ServerContext";
-import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType, XMLWriter, ErrorStanza } from "../../../library";
+import { XMLEvent, XMLEventHelper, XMLReader, IqRequestType, XMLWriter, ErrorStanza, Logger, LoggerFactory } from "../../../library";
 
 export class HandlerChain {
 
     protected readonly handlers: Handler[] = [];
-
-    public constructor() {
-        //XMLEventType
-    }
+    private static readonly log: Logger = LoggerFactory.create(HandlerChain);
 
     public register(handler: Handler): HandlerChain {
         this.handlers.push(handler);
@@ -33,13 +30,15 @@ export class HandlerChain {
                         const iqSupported = this.handlers.filter(h => this.isIqSupported(h, server, client, reader));
                         XMLEventHelper.processTag(events);
                         if (iqSupported.length > 0) {
+                            HandlerChain.log.info(() => 'Processed ' + reader.toReadableString());
                             iqSupported.forEach(h => h.handleIq(server, client, reader));
                         } else {
+                            HandlerChain.log.warn(() => 'Unprocessable ' + reader.toReadableString());
                             client.writeXML(XMLWriter.create('iq')
                                 .attr('type', 'error')
                                 .attr('from', server.hostname)
                                 .attr('to', client.jid.stringify())
-                                .attr('id', reader.getElement('iq').getAttr('id'))
+                                .attr('id', reader.getAttr('id'))
                                 .element(
                                     ErrorStanza.internalServerError()
                                 )
@@ -47,9 +46,12 @@ export class HandlerChain {
                         }
                     } else {
                         const supported = this.handlers.filter(h => this.isSupported(h, server, client, reader));
+                        XMLEventHelper.processTag(events);
                         if (supported.length > 0) {
-                            XMLEventHelper.processTag(events);
+                            HandlerChain.log.info(() => 'Processed ' + reader.toReadableString());
                             supported.forEach(h => h.handle(server, client, reader));
+                        } else {
+                            HandlerChain.log.warn(() => 'Unprocessable ' + reader.toReadableString());
                         }
                     }
                 }
@@ -60,20 +62,21 @@ export class HandlerChain {
     protected isSingleSupported(handler: Handler, server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
         try {
             return handler.isSingleSupported(server, client, event);
-        } catch {
+        } catch(e) {
+            HandlerChain.log.error(e.message || e);
             return false;
         }
     }
 
     protected isIq(reader: XMLReader): boolean {
-        const iq = reader.getElement('iq');
-        return iq != null && (iq.getAttr('type') == 'set' || iq.getAttr('type') === 'get');
+        return reader.getName() === 'iq' && (reader.getAttr('type') == 'set' || reader.getAttr('type') === 'get');
     }
 
     protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
         try {
-            return handler.isIqSupported(server, client, <IqRequestType>reader.getElement('iq').getAttr('type'), reader);
-        } catch {
+            return handler.isIqSupported(server, client, <IqRequestType>reader.getAttr('type'), reader);
+        } catch(e) {
+            HandlerChain.log.error(e.message || e);
             return false;
         }
     }
@@ -81,7 +84,8 @@ export class HandlerChain {
     protected isSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
         try {
             return handler.isSupported(server, client, reader);
-        } catch {
+        } catch(e) {
+            HandlerChain.log.error(e.message || e);
             return false;
         }
     }

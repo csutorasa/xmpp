@@ -23,8 +23,7 @@ export class Session extends IqBase {
     }
 
     public readRequest(request: XMLReader): SessionRequest {
-        const iq = request.getElement('iq');
-        const session = iq.getElement('session');
+        const session = request.getElement('session');
         return {
             id: this.readId(request),
         };

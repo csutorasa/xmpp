@@ -4,6 +4,12 @@ export * from './iq/IqBase';
 
 export * from './iq/xep-0030/DiscoveryInfo';
 export * from './iq/xep-0030/DiscoveryItems';
+export * from './iq/xep-0199/Ping';
+
+export * from './logger/ConsoleLogger';
+export * from './logger/FileLogger';
+export * from './logger/Logger';
+export * from './logger/LoggerFactory';
 
 export * from './stanza/ErrorStanza';
 

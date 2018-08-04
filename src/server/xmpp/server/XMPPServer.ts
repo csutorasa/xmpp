@@ -3,14 +3,15 @@ import { ServerContext } from "../context/ServerContext";
 import { ClientContext } from "../context/ClientContext";
 import { HandlerChain } from "../handler/HandlerChain";
 import { Handler } from "../handler/Handler";
-import { XMLWriter, XMLEvent } from "../../../library";
+import { XMLWriter, XMLEvent, Logger, LoggerFactory } from "../../../library";
 
 export class XMPPServer extends AbstractServer {
 
     protected readonly servers: AbstractServer[] = [];
     protected readonly context: ServerContext = {};
-    
+
     protected readonly handlerChain = new HandlerChain();
+    private static readonly log: Logger = LoggerFactory.create(XMPPServer);
 
     public constructor() {
         super();
@@ -38,7 +39,7 @@ export class XMPPServer extends AbstractServer {
     }
 
     protected onData(context: ClientContext, data: string): void {
-        console.log('<<< RawInput:', data);
+        XMPPServer.log.debug('<<< RawInput:' + data);
     }
 
     protected onXML(context: ClientContext, events: XMLEvent[]): void {
@@ -47,11 +48,11 @@ export class XMPPServer extends AbstractServer {
 
     protected onWrite(context: ClientContext, data: string, promise: Promise<any>): void {
         promise.then(() => {
-            console.log('>>> RawOutput:', data);
+            XMPPServer.log.debug('>>> RawOutput:' + data);
         }, err => {
-            console.error('>>> Output failed:', err);
+            XMPPServer.log.warn('>>> Output failed:' + err);
         })
-    } 
+    }
 
     public start(): Promise<any> {
         return Promise.all(this.servers.map(s => s.start()));

@@ -13,13 +13,11 @@ export class PlainAuthHandler extends Handler {
     }
 
     public isSupported(server: ServerContext, client: ClientContext, reader: XMLReader): boolean {
-        const tag = reader.getElement('auth');
-        return tag != null && tag.getAttr('mechanism') === 'PLAIN';
+        return reader.getName() == 'auth' && reader.getAttr('mechanism') === 'PLAIN';
     }
 
     public handle(server: ServerContext, client: ClientContext, reader: XMLReader): void {
-        const auth = reader.getElement('auth');
-        const buf = Buffer.from(auth.getContent(), 'base64');
+        const buf = Buffer.from(reader.getContent(), 'base64');
         let authenticated: boolean = false;
         let user: string;
         let pw: string;

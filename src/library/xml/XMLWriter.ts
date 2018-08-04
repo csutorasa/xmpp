@@ -114,6 +114,16 @@ export class XMLWriter {
         const xml = this.toXML();
         return xml.substr(0, xml.lastIndexOf('</'));
     }
+
+    public toReadableString(): string {
+        const attr = Object.keys(this.attributes).length > 0 ? (' {' + Object.keys(this.attributes).map(a => a + ': ' + this.attributes[a]).join(', ') + '}') : '';
+        const elements = this.elements.length > 0 ? " [" + this.elements.map(e => '\n' + e.toReadableString()).join('').split('\n').join('\n  ') + "\n]" : '';
+        return [
+            this.name,
+            attr,
+            elements,
+        ].join('');
+    }
 }
 
 

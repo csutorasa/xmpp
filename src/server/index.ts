@@ -8,6 +8,7 @@ import { BindHandler } from "./xmpp/iq/BindHandler";
 import { SessionHandler } from "./xmpp/iq/SessionHandler";
 import { DiscoveryInfoHandler } from "./xmpp/iq/xep-0030/DiscoveryInfoHandler";
 import { DiscoveryItemsHandler } from "./xmpp/iq/xep-0030/DiscoveryItemsHandler";
+import { PingHandler } from "./xmpp/iq/xep-0199/PingHandler";
 
 const server = new XMPPServer()
 
@@ -22,6 +23,7 @@ server
     .addHandler(new SessionHandler())
     .addHandler(new DiscoveryInfoHandler())
     .addHandler(new DiscoveryItemsHandler())
+    .addHandler(new PingHandler())
 
 server.start().then(() => {
     console.log('Server started');

@@ -31,7 +31,7 @@ export class XMLEventHelper {
         if (close === -1) {
             return undefined;
         }
-        return XMLReader.fromEvents(events.slice(0, close + 1));
+        return XMLReader.fromEvents(events.slice(0, close + 1))[0];
     }
 
     public static processFirst(events: XMLEvent[]): XMLEvent {
@@ -47,6 +47,6 @@ export class XMLEventHelper {
         if (close === -1) {
             return undefined;
         }
-        return XMLReader.fromEvents(events.splice(0, close + 1));
+        return XMLReader.fromEvents(events.splice(0, close + 1))[0];
     }
 }

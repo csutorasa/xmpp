@@ -28,7 +28,7 @@ export class Bind extends IqBase {
     }
 
     public readRequest(request: XMLReader): BindRequest {
-        const bind = this.readData(request, 'bind');
+        const bind = request.getElement('bind');
         const resource = bind.getElement('resource') != null ? bind.getElement('resource').getContent() : null;
         return {
             id: this.readId(request),
