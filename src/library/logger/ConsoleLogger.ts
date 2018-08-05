@@ -1,4 +1,5 @@
-import { LogLevel, AbstractLogger } from "./Logger";
+/* tslint:disable:no-console */
+import { AbstractLogger, LogLevel } from './Logger';
 
 export class ConsoleLogger extends AbstractLogger {
 

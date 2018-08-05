@@ -1,5 +1,5 @@
-import { XMLEvent } from "./XMLEvent";
-import { XML } from "./XML";
+import { XML } from './XML';
+import { XMLEvent } from './XMLEvent';
 
 export class XMLEventHelper {
 
@@ -8,7 +8,7 @@ export class XMLEventHelper {
     }
 
     public static has(events: XMLEvent[], type: 'open' | 'close', name: string): boolean {
-        return events.find(e => e.type === type && e.name === name) != null;
+        return events.find((e) => e.type === type && e.name === name) != null;
     }
 
     public static isCompleteTag(events: XMLEvent[], name?: string): boolean {
@@ -27,7 +27,7 @@ export class XMLEventHelper {
             return undefined;
         }
         const open = events[0];
-        const close = events.findIndex(e => e.type === 'close' && e.name === open.name);
+        const close = events.findIndex((e) => e.type === 'close' && e.name === open.name);
         if (close === -1) {
             return undefined;
         }
@@ -43,7 +43,7 @@ export class XMLEventHelper {
             return undefined;
         }
         const open = events[0];
-        const close = events.findIndex(e => e.type === 'close' && e.name === open.name);
+        const close = events.findIndex((e) => e.type === 'close' && e.name === open.name);
         if (close === -1) {
             return undefined;
         }

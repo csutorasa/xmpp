@@ -1,4 +1,4 @@
-import { XML } from "../xml/XML";
+import { XML } from '../xml/XML';
 
 export interface IqRequest {
     id: string;
@@ -25,6 +25,6 @@ export abstract class IqBase {
     protected createIq(id: string, type: IqResponseType): XML {
         return XML.create('iq')
             .attr('type', type)
-            .attr('id', id)
+            .attr('id', id);
     }
 }

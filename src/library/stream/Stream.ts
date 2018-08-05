@@ -38,14 +38,14 @@ export class Stream {
 
     public isOpenStreamMessage(request: XMLEvent): boolean {
         return XMLEventHelper.is(request, 'open', 'stream:stream')
-            && request.attributes['xmlns'] === Stream.JABBER_XMLNS && request.attributes['xmlns:stream'] === Stream.STREAM_XMLNS;
+            && request.attributes.xmlns === Stream.JABBER_XMLNS && request.attributes['xmlns:stream'] === Stream.STREAM_XMLNS;
     }
 
     public readOpenStreamMessage(request: XMLEvent): StreamRequest {
         return {
             from: request.attributes.from,
             version: request.attributes.version,
-        }
+        };
     }
 
     public isCloseStreamMessage(request: XMLEvent): boolean {

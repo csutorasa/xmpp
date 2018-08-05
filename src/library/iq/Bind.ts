@@ -1,6 +1,6 @@
-import { XML } from '../xml/XML';
 import { JID } from '../util/jid';
-import { IqRequest, IqResponse, IqBase } from './IqBase';
+import { XML } from '../xml/XML';
+import { IqBase, IqRequest, IqResponse } from './IqBase';
 
 export interface BindRequest extends IqRequest {
     resource?: string;
@@ -18,8 +18,8 @@ export class Bind extends IqBase {
         return this.createIq(response.id, 'result')
             .element(XML.create('bind')
                 .xmlns('', Bind.BIND_XMLNS)
-                .element(XML.create('jid').text(response.jid.stringify()))
-            )
+                .element(XML.create('jid').text(response.jid.stringify())),
+            );
     }
 
     public isRequest(request: XML): boolean {
@@ -31,7 +31,7 @@ export class Bind extends IqBase {
         const resource = bind.getElement('resource') != null ? bind.getElement('resource').getContent() : null;
         return {
             id: this.readId(request),
-            resource: resource,
-        }; 
+            resource,
+        };
     }
 }

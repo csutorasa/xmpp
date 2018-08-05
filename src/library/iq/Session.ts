@@ -1,5 +1,5 @@
 import { XML } from '../xml/XML';
-import { IqBase, IqResponse, IqRequest } from './IqBase';
+import { IqBase, IqRequest, IqResponse } from './IqBase';
 
 export interface SessionRequest extends IqRequest {
 }
@@ -14,7 +14,7 @@ export class Session extends IqBase {
 
     public createResponse(response: SessionResponse): XML {
         return this.createIq(response.id, 'result')
-            .attr('from', response.host)
+            .attr('from', response.host);
     }
 
     public isRequest(request: XML): boolean {

@@ -1,20 +1,15 @@
-import { XML } from "../xml/XML";
+import { XML } from '../xml/XML';
 
 export type ErrorType = 'auth' | 'cancel' | 'continue' | 'modify' | 'wait';
 
 export class ErrorStanza {
     public static readonly XMPPSTANZAS_XMLNS = 'urn:ietf:params:xml:ns:xmpp-stanzas';
 
-    protected static createError(type: ErrorType): XML {
-        return XML.create('error')
-            .attr('type', type);
-    }
-
     public static badRequest(): XML {
         return ErrorStanza.createError('modify')
             .element(
                 XML.create('bad-request')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -22,7 +17,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('conflict')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -30,7 +25,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel') // or modify
             .element(
                 XML.create('feature-not-implemented')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -38,7 +33,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('auth')
             .element(
                 XML.create('forbidden')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -48,7 +43,7 @@ export class ErrorStanza {
             .element(
                 XML.create('gone')
                     .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
-                    .text(uri)
+                    .text(uri),
             );
     }
 
@@ -56,7 +51,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('internal-server-error')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -64,7 +59,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('item-not-found')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -73,7 +68,7 @@ export class ErrorStanza {
             .attr('by', by)
             .element(
                 XML.create('jid-malformed')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -81,7 +76,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('modify')
             .element(
                 XML.create('not-acceptable')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -89,7 +84,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('not-allowed')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -97,7 +92,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('auth')
             .element(
                 XML.create('not-authorized')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -106,7 +101,7 @@ export class ErrorStanza {
             .attr('by', by)
             .element(
                 XML.create('policy-violation')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -114,7 +109,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('wait')
             .element(
                 XML.create('recipient-unavailable')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -122,7 +117,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('modify')
             .element(
                 XML.create('redirect')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -130,7 +125,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('auth')
             .element(
                 XML.create('registration-required')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -138,7 +133,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('remote-server-not-found')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -146,7 +141,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('wait')
             .element(
                 XML.create('remote-server-timeout')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -154,7 +149,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('wait')
             .element(
                 XML.create('resource-constraint')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -162,7 +157,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('cancel')
             .element(
                 XML.create('service-unavailable')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -170,7 +165,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('auth')
             .element(
                 XML.create('subscription-required')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -178,7 +173,7 @@ export class ErrorStanza {
         return ErrorStanza.createError('modify')
             .element(
                 XML.create('undefined-condition')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
     }
 
@@ -186,7 +181,12 @@ export class ErrorStanza {
         return ErrorStanza.createError('wait') // modify
             .element(
                 XML.create('unexpected-request')
-                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS)
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
             );
+    }
+
+    protected static createError(type: ErrorType): XML {
+        return XML.create('error')
+            .attr('type', type);
     }
 }

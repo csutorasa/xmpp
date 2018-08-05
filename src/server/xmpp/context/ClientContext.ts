@@ -1,5 +1,5 @@
-import { XML } from "../../../library";
-import { JID } from "../../../library/util/jid";
+import { XML } from '../../../library';
+import { JID } from '../../../library/util/jid';
 
 export enum ClientState {
     Connecting,

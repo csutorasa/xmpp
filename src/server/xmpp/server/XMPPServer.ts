@@ -1,17 +1,17 @@
-import { AbstractServer } from "./AbstractServer";
-import { ServerContext } from "../context/ServerContext";
-import { ClientContext } from "../context/ClientContext";
-import { HandlerChain } from "../handler/HandlerChain";
-import { Handler } from "../handler/Handler";
-import { XML, XMLEvent, Logger, LoggerFactory } from "../../../library";
+import { ILogger, LoggerFactory, XML, XMLEvent } from '../../../library';
+import { ClientContext } from '../context/ClientContext';
+import { ServerContext } from '../context/ServerContext';
+import { Handler } from '../handler/Handler';
+import { HandlerChain } from '../handler/HandlerChain';
+import { AbstractServer } from './AbstractServer';
 
 export class XMPPServer extends AbstractServer {
+    private static readonly log: ILogger = LoggerFactory.create(XMPPServer);
 
     protected readonly servers: AbstractServer[] = [];
     protected readonly context: ServerContext = {};
 
     protected readonly handlerChain = new HandlerChain();
-    private static readonly log: Logger = LoggerFactory.create(XMPPServer);
 
     public constructor() {
         super();
@@ -38,6 +38,16 @@ export class XMPPServer extends AbstractServer {
         this.handlerChain.deregister(handler);
     }
 
+    public start(): Promise<any> {
+        return Promise.all(this.servers.map((s) => s.start())).then(() => {
+            XMPPServer.log.info('Server started');
+        });
+    }
+
+    public stop(): Promise<any> {
+        return Promise.all(this.servers.map((s) => s.stop()));
+    }
+
     protected onData(context: ClientContext, data: string): void {
         XMPPServer.log.debug('<<< RawInput:' + data);
     }
@@ -49,16 +59,8 @@ export class XMPPServer extends AbstractServer {
     protected onWrite(context: ClientContext, data: string, promise: Promise<any>): void {
         promise.then(() => {
             XMPPServer.log.debug('>>> RawOutput:' + data);
-        }, err => {
+        }, (err) => {
             XMPPServer.log.warn('>>> Output failed:' + err);
-        })
-    }
-
-    public start(): Promise<any> {
-        return Promise.all(this.servers.map(s => s.start()));
-    }
-
-    public stop(): Promise<any> {
-        return Promise.all(this.servers.map(s => s.stop()));
+        });
     }
 }

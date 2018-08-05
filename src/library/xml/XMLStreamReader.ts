@@ -1,25 +1,25 @@
-import * as Parser from 'node-xml-stream-parser'
+import * as Parser from 'node-xml-stream-parser';
 import { XMLEvent } from './XMLEvent';
 
 export class XMLStreamReader {
 
     protected parser = new Parser();
     protected content: XMLEvent[] = [];
-    protected handlers: ((event: XMLEvent) => void)[] = [];
+    protected handlers: Array<(event: XMLEvent) => void> = [];
 
     constructor() {
         this.parser.on('opentag', (name: string, attributes: { [key: string]: string }) => {
             const event: XMLEvent = {
                 type: 'open',
-                name: name,
-                attributes: attributes,
+                name,
+                attributes,
             };
             this.runEventHandlers(event);
         });
         this.parser.on('closetag', (name: string) => {
             const event: XMLEvent = {
                 type: 'close',
-                name: name,
+                name,
             };
             this.runEventHandlers(event);
         });
@@ -40,17 +40,10 @@ export class XMLStreamReader {
         this.parser.on('instruction', (name: string, attributes: { [key: string]: string }) => {
             const event: XMLEvent = {
                 type: 'instruction',
-                name: name,
-                attributes: attributes,
+                name,
+                attributes,
             };
             this.runEventHandlers(event);
-        });
-    }
-
-    protected runEventHandlers(event: XMLEvent, run: boolean = true): void {
-        this.content.push(event);
-        this.handlers.forEach(e => {
-            e(event);
         });
     }
 
@@ -65,6 +58,11 @@ export class XMLStreamReader {
     public getContent(): XMLEvent[] {
         return this.content;
     }
+
+    protected runEventHandlers(event: XMLEvent, run: boolean = true): void {
+        this.content.push(event);
+        this.handlers.forEach((e) => {
+            e(event);
+        });
+    }
 }
-
-

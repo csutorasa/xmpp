@@ -1,7 +1,7 @@
-import { XML, DiscoveryInfo, IqRequestType } from "../../../../library";
-import { ClientContext } from "../../context/ClientContext";
-import { Handler } from "../../handler/Handler";
-import { ServerContext } from "../../context/ServerContext";
+import { DiscoveryInfo, IqRequestType, XML } from '../../../../library';
+import { ClientContext } from '../../context/ClientContext';
+import { ServerContext } from '../../context/ServerContext';
+import { Handler } from '../../handler/Handler';
 
 export class DiscoveryInfoHandler extends Handler {
 

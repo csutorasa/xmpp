@@ -1,9 +1,9 @@
-import { XML } from "./XML";
+import { XML } from './XML';
 
 export class XMLEventChecker {
 
     protected value: boolean = true;
-    
+
     public constructor(protected reader: XML) {
 
     }
@@ -26,7 +26,7 @@ export class XMLEventChecker {
 
     public contentMatch(content: string) {
         if (this.value) {
-            this.value = this.reader.getContent() == content;
+            this.value = this.reader.getContent() === content;
         }
     }
 }

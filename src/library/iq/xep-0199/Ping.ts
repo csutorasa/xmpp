@@ -1,5 +1,5 @@
 import { XML } from '../../xml/XML';
-import { IqRequest, IqResponse, IqBase } from '../IqBase';
+import { IqBase, IqRequest, IqResponse } from '../IqBase';
 
 export interface PingRequest extends IqRequest {
 
@@ -17,7 +17,7 @@ export class Ping extends IqBase {
     public createResponse(response: PingResponse): XML {
         return this.createIq(response.id, 'result')
             .attr('to', response.to)
-            .attr('from', response.from)
+            .attr('from', response.from);
     }
 
     public isRequest(request: XML): boolean {

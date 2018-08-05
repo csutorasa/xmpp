@@ -1,7 +1,7 @@
-import { XMLEvent, XMLEventHelper } from "../../../library";
-import { ClientContext, ClientState } from "../context/ClientContext";
-import { Handler } from "../handler/Handler";
-import { ServerContext } from "../context/ServerContext";
+import { XMLEvent, XMLEventHelper } from '../../../library';
+import { ClientContext, ClientState } from '../context/ClientContext';
+import { ServerContext } from '../context/ServerContext';
+import { Handler } from '../handler/Handler';
 
 export class InstructionHandler extends Handler {
     public isSingleSupported(server: ServerContext, client: ClientContext, event: XMLEvent): boolean {
@@ -9,6 +9,6 @@ export class InstructionHandler extends Handler {
     }
 
     public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
-        
+        // Ignore message
     }
 }

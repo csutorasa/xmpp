@@ -1,0 +1,12 @@
+{
+    "extends": "tslint:recommended",
+    "rules": {
+        "quotemark": [true, "single", "avoid-escape"],
+        "max-line-length": [true, {"limit": 160, "ignore-pattern": "^import |^export {(.*?)}"}],
+        "interface-name": [false],
+        "no-empty-interface": [false],
+        "object-literal-sort-keys": [false]
+    },
+    "rulesDirectory": [],
+    "jsRules": {}
+}

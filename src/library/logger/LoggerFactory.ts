@@ -1,9 +1,9 @@
-import { Logger, LogLevel } from "./Logger";
-import { ConsoleLogger } from "./ConsoleLogger";
+import { ConsoleLogger } from './ConsoleLogger';
+import { ILogger, LogLevel } from './Logger';
 
 export class LoggerFactory {
-    public static create(type: { new(): any }): Logger {
-        const logger: Logger = new ConsoleLogger(type);
+    public static create(type: { new(): any }): ILogger {
+        const logger: ILogger = new ConsoleLogger(type);
         logger.setLevel(LogLevel.Info);
         return logger;
     }

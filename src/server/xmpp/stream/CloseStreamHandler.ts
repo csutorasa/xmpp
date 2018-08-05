@@ -1,8 +1,7 @@
-import { XMLEvent, XMLEventHelper, Stream } from "../../../library";
-import { ClientContext, ClientState } from "../context/ClientContext";
-import { Handler } from "../handler/Handler";
-import { ServerContext } from "../context/ServerContext";
-
+import { Stream, XMLEvent, XMLEventHelper } from '../../../library';
+import { ClientContext, ClientState } from '../context/ClientContext';
+import { ServerContext } from '../context/ServerContext';
+import { Handler } from '../handler/Handler';
 
 export class CloseStreamHandler extends Handler {
     protected stream = new Stream();

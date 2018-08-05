@@ -16,14 +16,6 @@ export class Features {
     public static readonly SESSION_XMLNS = 'urn:ietf:params:xml:ns:xmpp-session';
 
     public createFeaturesMessage(response: FeaturesResponse): XML {
-        return response.features
-            /*.element('mechanisms', XML.create().xmlns('', XMLStream.MECHANISMS_XMLNS)
-                .element('mechanism', XML.create().text('PLAIN'), XML.create().text('SCRAM-SHA-1'), XML.create().text('CRAM-MD5'), XML.create().text('DIGEST-MD5'),)
-            )
-            .element('compression', XML.create().xmlns('', XMLStream.COMPRESSION_XMLNS)
-                .element('method', XML.create().text('zlib'))
-            )
-            .element('ver', XML.create().xmlns('', XMLStream.VER_XMLNS))
-            .element('register', XML.create().xmlns('', XMLStream.REGISTER_XMLNS))*/
+        return response.features;
     }
 }

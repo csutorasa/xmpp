@@ -1,8 +1,7 @@
-import { XML, Session, IqRequestType } from "../../../library";
-import { ClientContext } from "../context/ClientContext";
-import { Handler } from "../handler/Handler";
-import { ServerContext } from "../context/ServerContext";
-
+import { IqRequestType, Session, XML } from '../../../library';
+import { ClientContext } from '../context/ClientContext';
+import { ServerContext } from '../context/ServerContext';
+import { Handler } from '../handler/Handler';
 
 export class SessionHandler extends Handler {
     protected session = new Session();
@@ -19,7 +18,7 @@ export class SessionHandler extends Handler {
         const request = this.session.readRequest(reader);
         client.writeXML(this.session.createResponse({
             id: request.id,
-            host: server.hostname
+            host: server.hostname,
         }));
     }
 }

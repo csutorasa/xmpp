@@ -1,8 +1,8 @@
 import { XML } from '../../xml/XML';
-import { IqRequest, IqResponse, IqBase } from '../IqBase';
+import { IqBase, IqRequest, IqResponse } from '../IqBase';
 
 export interface DiscoveryItemsRequest extends IqRequest {
-    
+
 }
 
 export interface DiscoveryItemsResponse extends IqResponse {
@@ -25,8 +25,8 @@ export class DiscoveryItems extends IqBase {
             .attr('to', response.to)
             .attr('from', response.from)
             .element(XML.create('query')
-                .xmlns('', DiscoveryItems.DISCOVERYITEMS_XMLNS)
-            )
+                .xmlns('', DiscoveryItems.DISCOVERYITEMS_XMLNS),
+            );
     }
 
     public isRequest(request: XML): boolean {

@@ -1,6 +1,6 @@
-import { XML } from '../../xml/XML';
-import { IqRequest, IqResponse, IqBase } from '../IqBase';
 import { ErrorStanza } from '../../stanza/ErrorStanza';
+import { XML } from '../../xml/XML';
+import { IqBase, IqRequest, IqResponse } from '../IqBase';
 
 export interface DiscoveryInfoRequest extends IqRequest {
 
@@ -33,8 +33,8 @@ export class DiscoveryInfo extends IqBase {
                 .attr('to', response.to)
                 .attr('from', response.from)
                 .element(XML.create('query')
-                    .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS)
-                )
+                    .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS),
+                );
     }
 
     public createError(response: DiscoveryInfoResponse): XML {
@@ -42,9 +42,9 @@ export class DiscoveryInfo extends IqBase {
             .attr('to', response.to)
             .attr('from', response.from)
             .element(XML.create('query')
-                .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS)
+                .xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS),
             )
-            .element(ErrorStanza.itemNotFound())
+            .element(ErrorStanza.itemNotFound());
     }
 
     public isRequest(request: XML): boolean {

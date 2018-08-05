@@ -1,4 +1,12 @@
 export class JID {
+
+    public static parse(data: string): JID {
+        const at = data.split('@');
+        const name = at.length > 1 ? at.shift() : null;
+        const slash = at.join('@').split('/');
+        const host = slash.length > 1 ? slash.shift() : null;
+        return new JID(name, host, slash.join('/'));
+    }
     public constructor(public host: string, public name?: string, public resource?: string) {
 
     }
@@ -13,13 +21,5 @@ export class JID {
         } else {
             return this.host + '/' + this.resource;
         }
-    }
-
-    public static parse(data: string): JID {
-        const at = data.split('@');
-        const name = at.length > 1 ? at.shift() : null;
-        const slash = at.join('@').split('/');
-        const host = slash.length > 1 ? slash.shift() : null;
-        return new JID(name, host,slash.join('/'));
     }
 }

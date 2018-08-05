@@ -22,10 +22,24 @@ module.exports = {
         rules: [
             {
                 test: /\.tsx?$/,
+                enforce: 'pre',
+                exclude: /node_modules/,
+                use: [
+                    {
+                        loader: 'tslint-loader',
+                        options: { 
+                            emitErrors: false,
+                            fix: true,
+                        }
+                    },
+                ]
+            },
+            {
+                test: /\.tsx?$/,
                 use: 'ts-loader',
-                exclude: /node_modules/
-            }
-        ]
+                exclude: /node_modules/,
+            },
+        ],
     },
     resolve: {
         extensions: ['.ts', '.tsx', ".js", ".json"]

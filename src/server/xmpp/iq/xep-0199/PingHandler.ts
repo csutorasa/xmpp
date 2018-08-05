@@ -1,7 +1,7 @@
-import { XML, IqRequestType, Ping } from "../../../../library";
-import { ClientContext } from "../../context/ClientContext";
-import { Handler } from "../../handler/Handler";
-import { ServerContext } from "../../context/ServerContext";
+import { IqRequestType, Ping, XML } from '../../../../library';
+import { ClientContext } from '../../context/ClientContext';
+import { ServerContext } from '../../context/ServerContext';
+import { Handler } from '../../handler/Handler';
 
 export class PingHandler extends Handler {
 
