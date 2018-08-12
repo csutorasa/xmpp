@@ -6,6 +6,8 @@ export interface IqRequest {
 
 export interface IqResponse {
     id: string;
+    to?: string;
+    from?: string;
 }
 
 export type IqRequestType = 'get' | 'set';

@@ -1,4 +1,4 @@
-import { DiscoveryInfo, IqRequestType, XML } from '../../../../library';
+import { DiscoveryInfo, Feature, IqRequestType, XML } from '../../../../library';
 import { ClientContext } from '../../context/ClientContext';
 import { ServerContext } from '../../context/ServerContext';
 import { Handler } from '../../handler/Handler';
@@ -6,6 +6,13 @@ import { Handler } from '../../handler/Handler';
 export class DiscoveryInfoHandler extends Handler {
 
     protected discoveryInfo = new DiscoveryInfo();
+
+    public init(context: ServerContext): void {
+        const feature: Feature = {
+            var: DiscoveryInfo.DISCOVERYINFO_XMLNS,
+        };
+        context.discoveryInfo.element(this.discoveryInfo.createFeature(feature));
+    }
 
     public isIqSupported(server: ServerContext, client: ClientContext, type: IqRequestType, reader: XML): boolean {
         return this.discoveryInfo.isRequest(reader);
@@ -18,8 +25,7 @@ export class DiscoveryInfoHandler extends Handler {
             id: request.id,
             from: server.hostname,
             to: client.jid.stringify(),
-            features: [],
-            indentities: [],
+            features: server.discoveryInfo,
         }));
     }
 }

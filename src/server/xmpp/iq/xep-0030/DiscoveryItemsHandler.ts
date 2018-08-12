@@ -1,4 +1,4 @@
-import { DiscoveryItems, IqRequestType, XML } from '../../../../library';
+import { DiscoveryInfo, DiscoveryItems, Feature, IqRequestType, XML } from '../../../../library';
 import { ClientContext } from '../../context/ClientContext';
 import { ServerContext } from '../../context/ServerContext';
 import { Handler } from '../../handler/Handler';
@@ -6,6 +6,14 @@ import { Handler } from '../../handler/Handler';
 export class DiscoveryItemsHandler extends Handler {
 
     protected discoveryItems = new DiscoveryItems();
+    protected discoveryInfo = new DiscoveryInfo();
+
+    public init(context: ServerContext): void {
+        const feature: Feature = {
+            var: DiscoveryItems.DISCOVERYITEMS_XMLNS,
+        };
+        context.discoveryInfo.element(this.discoveryInfo.createFeature(feature));
+    }
 
     public isIqSupported(server: ServerContext, client: ClientContext, type: IqRequestType, reader: XML): boolean {
         return this.discoveryItems.isRequest(reader);

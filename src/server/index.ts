@@ -1,5 +1,6 @@
 import { PlainAuthHandler } from './xmpp/auth/PlainAuthHandler';
 import { BindHandler } from './xmpp/iq/BindHandler';
+import { RosterHandler } from './xmpp/iq/RosterHandler';
 import { SessionHandler } from './xmpp/iq/SessionHandler';
 import { DiscoveryInfoHandler } from './xmpp/iq/xep-0030/DiscoveryInfoHandler';
 import { DiscoveryItemsHandler } from './xmpp/iq/xep-0030/DiscoveryItemsHandler';
@@ -23,11 +24,7 @@ server
     .addHandler(new SessionHandler())
     .addHandler(new DiscoveryInfoHandler())
     .addHandler(new DiscoveryItemsHandler())
+    .addHandler(new RosterHandler())
     .addHandler(new PingHandler());
 
 server.start();
-
-/*import { XML, XMLStreamReader } from "../library";
-const reader = new XMLStreamReader();
-reader.append('<test asd="dsa"></test>')
-console.log(reader.getContent());*/

@@ -1,4 +1,5 @@
 export * from './iq/Bind';
+export * from './iq/Roster';
 export * from './iq/Session';
 export * from './iq/IqBase';
 

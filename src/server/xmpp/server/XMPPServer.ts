@@ -1,4 +1,4 @@
-import { ILogger, LoggerFactory, XML, XMLEvent } from '../../../library';
+import { DiscoveryInfo, DiscoveryItems, ILogger, LoggerFactory, XML, XMLEvent } from '../../../library';
 import { ClientContext } from '../context/ClientContext';
 import { ServerContext } from '../context/ServerContext';
 import { Handler } from '../handler/Handler';
@@ -18,6 +18,8 @@ export class XMPPServer extends AbstractServer {
         this.context.hostname = 'localhost';
         this.context.sessionFeatures = XML.create('stream:features');
         this.context.authFeatures = XML.create('stream:features');
+        this.context.discoveryInfo = XML.create('query').xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS);
+        this.context.discoveryItems = XML.create('query').xmlns('', DiscoveryItems.DISCOVERYITEMS_XMLNS);
     }
 
     public registerServer(server: AbstractServer): XMPPServer {

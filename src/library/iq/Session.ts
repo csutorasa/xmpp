@@ -5,7 +5,6 @@ export interface SessionRequest extends IqRequest {
 }
 
 export interface SessionResponse extends IqResponse {
-    host: string;
 }
 
 export class Session extends IqBase {
@@ -14,7 +13,7 @@ export class Session extends IqBase {
 
     public createResponse(response: SessionResponse): XML {
         return this.createIq(response.id, 'result')
-            .attr('from', response.host);
+            .attr('from', response.from);
     }
 
     public isRequest(request: XML): boolean {

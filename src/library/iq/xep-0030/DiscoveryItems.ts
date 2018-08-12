@@ -6,8 +6,6 @@ export interface DiscoveryItemsRequest extends IqRequest {
 }
 
 export interface DiscoveryItemsResponse extends IqResponse {
-    to: string;
-    from: string;
     items: Item[];
 }
 
