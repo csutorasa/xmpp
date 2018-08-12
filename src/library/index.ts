@@ -6,6 +6,7 @@ export * from './iq/IqBase';
 export * from './iq/xep-0030/DiscoveryInfo';
 export * from './iq/xep-0030/DiscoveryItems';
 export * from './iq/xep-0199/Ping';
+export * from './iq/xep-0202/Time';
 
 export * from './logger/ConsoleLogger';
 export * from './logger/FileLogger';

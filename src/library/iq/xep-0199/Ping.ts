@@ -6,8 +6,7 @@ export interface PingRequest extends IqRequest {
 }
 
 export interface PingResponse extends IqResponse {
-    to: string;
-    from: string;
+
 }
 
 export class Ping extends IqBase {
