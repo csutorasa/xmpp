@@ -74,7 +74,7 @@ export abstract class AbstractLogger implements ILogger {
             } else {
                 str = param;
             }
-            this.doLog(level, this.format(str));
+            this.doLog(level, this.format(level, str));
         }
     }
 
@@ -93,7 +93,7 @@ export abstract class AbstractLogger implements ILogger {
         return new Date().toISOString();
     }
 
-    protected format(message: string) {
-        return this.getTime() + ' ' + this.levelToString(this.getLevel()) + ' ' + this.name + ' ' + message;
+    protected format(level: LogLevel, message: string) {
+        return this.getTime() + ' ' + this.levelToString(level) + ' ' + this.name + ' ' + message;
     }
 }
