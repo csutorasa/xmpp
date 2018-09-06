@@ -1,3 +1,5 @@
+import { Configuration } from './config/Configuration';
+import { ConfigurationManager } from './config/ConfigurationManager';
 import { PlainAuthHandler } from './xmpp/auth/PlainAuthHandler';
 import { BindHandler } from './xmpp/iq/BindHandler';
 import { RosterHandler } from './xmpp/iq/RosterHandler';
@@ -14,9 +16,11 @@ import { OpenStreamHandler } from './xmpp/stream/OpenStreamHandler';
 
 const server = new XMPPServer();
 
+const config: Configuration = ConfigurationManager.getConfiguration();
+
 server
-    .registerServer(new TcpServer())
-    // .registerServer(new TcpsServer())
+    .registerServer(new TcpServer(config.server.tcpPort))
+    // .registerServer(new TcpsServer(config.server.tcpsPort))
     .addHandler(new OpenStreamHandler())
     .addHandler(new CloseStreamHandler())
     .addHandler(new InstructionHandler())

@@ -1,0 +1,17 @@
+{
+    "db": {
+        "url": "mongodb://localhost:27017",
+        "dbname": "xmppdb"
+    },
+    "logging": {
+        "consoleLevel": "info",
+        "fileLevel": "info",
+        "logFilePath": "./server.log"
+    },
+    "server": {
+        "tcpPort": 5222,
+        "tcpsPort": 5223,
+        "wsPort": 80,
+        "wssPort": 443
+    }
+}

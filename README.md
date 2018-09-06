@@ -4,7 +4,8 @@
 
 Prerequisites:
 
-- [Node.js](https://nodejs.org/) 7 or later is recommended
+- [Node.js](https://nodejs.org/) 7 or later
+- [MongoDB](https://www.mongodb.com/) 4 or later
 - Any XMPP client for testing and using like [Pidgin](https://www.pidgin.im/)
 
 Clone the repository and install the required dependencies. Build the application and run it.

@@ -6,6 +6,25 @@ export enum LogLevel {
     Trace,
 }
 
+export function parseLogLevel(level: string): LogLevel {
+    if (level.match(/error/i)) {
+        return LogLevel.Error;
+    }
+    if (level.match(/warn/i)) {
+        return LogLevel.Warn;
+    }
+    if (level.match(/info/i)) {
+        return LogLevel.Info;
+    }
+    if (level.match(/debug/i)) {
+        return LogLevel.Debug;
+    }
+    if (level.match(/trace/i)) {
+        return LogLevel.Trace;
+    }
+    return LogLevel.Info;
+}
+
 export interface ILogger {
     error(message: string | (() => string)): void;
     warn(message: string | (() => string)): void;
