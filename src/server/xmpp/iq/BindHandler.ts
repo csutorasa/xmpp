@@ -1,9 +1,11 @@
-import { Bind, IqRequestType, XML } from '../../../library';
+import { Bind, ILogger, IqRequestType, LoggerFactory, XML } from '../../../library';
 import { ClientContext } from '../context/ClientContext';
 import { ServerContext } from '../context/ServerContext';
 import { Handler } from '../handler/Handler';
+import { SessionManager } from '../manager/SessionManager';
 
 export class BindHandler extends Handler {
+    private static readonly log: ILogger = LoggerFactory.create(BindHandler);
 
     protected bind = new Bind();
 
@@ -23,5 +25,7 @@ export class BindHandler extends Handler {
             id: request.id,
             jid: client.jid,
         }));
+
+        SessionManager.add(client);
     }
 }

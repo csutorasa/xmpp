@@ -69,7 +69,7 @@ export class HandlerChain {
     }
 
     protected isIq(reader: XML): boolean {
-        return reader.getName() === 'iq' && (reader.getAttr('type') === 'set' || reader.getAttr('type') === 'get');
+        return (reader.getName() === 'iq' && (reader.getAttr('type') === 'set' || reader.getAttr('type') === 'get'));
     }
 
     protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XML): boolean {

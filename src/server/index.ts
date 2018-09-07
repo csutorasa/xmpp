@@ -2,8 +2,11 @@ import { Configuration } from './config/Configuration';
 import { ConfigurationManager } from './config/ConfigurationManager';
 import { PlainAuthHandler } from './xmpp/auth/PlainAuthHandler';
 import { BindHandler } from './xmpp/iq/BindHandler';
+import { MessageHandler } from './xmpp/iq/MessageHandler';
+import { PresenceHandler } from './xmpp/iq/PresenceHandler';
 import { RosterHandler } from './xmpp/iq/RosterHandler';
 import { SessionHandler } from './xmpp/iq/SessionHandler';
+import { VCardHandler } from './xmpp/iq/VCardHandler';
 import { DiscoveryInfoHandler } from './xmpp/iq/xep-0030/DiscoveryInfoHandler';
 import { DiscoveryItemsHandler } from './xmpp/iq/xep-0030/DiscoveryItemsHandler';
 import { PingHandler } from './xmpp/iq/xep-0199/PingHandler';
@@ -30,6 +33,9 @@ server
     .addHandler(new DiscoveryInfoHandler())
     .addHandler(new DiscoveryItemsHandler())
     .addHandler(new RosterHandler())
+    .addHandler(new VCardHandler())
+    .addHandler(new PresenceHandler())
+    .addHandler(new MessageHandler())
     .addHandler(new TimeHandler())
     .addHandler(new PingHandler());
 

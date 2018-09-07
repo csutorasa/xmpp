@@ -63,6 +63,14 @@ export class ErrorStanza {
             );
     }
 
+    public static vCardNotFound(): XML {
+        return ErrorStanza.createError('cancel')
+            .element(
+                XML.create('item-not-found')
+                    .xmlns('', ErrorStanza.XMPPSTANZAS_XMLNS),
+            );
+    }
+
     public static jidMalformed(by: string): XML {
         return ErrorStanza.createError('auth')
             .attr('by', by)
