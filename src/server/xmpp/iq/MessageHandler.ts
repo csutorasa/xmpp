@@ -23,7 +23,7 @@ export class MessageHandler extends Handler {
         return this.message.isRequest(reader);
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handle(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.message.readRequest(reader);
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
         // MessageHandler.log.info(me ? 'me:' + me.name : 'me is undefined');

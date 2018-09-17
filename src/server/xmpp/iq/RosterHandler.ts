@@ -20,7 +20,7 @@ export class RosterHandler extends Handler {
         return this.roster.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.roster.readRequest(reader);
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
         RosterHandler.log.info(me ? 'me:' + me.name : 'me is undefined');

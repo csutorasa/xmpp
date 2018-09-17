@@ -14,7 +14,7 @@ export class SessionHandler extends Handler {
         return this.session.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.session.readRequest(reader);
         client.writeXML(this.session.createResponse({
             id: request.id,

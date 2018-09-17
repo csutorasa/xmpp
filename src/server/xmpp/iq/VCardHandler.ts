@@ -20,7 +20,7 @@ export class VCardHandler extends Handler {
         return this.vCard.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.vCard.readRequest(reader);
 
         client.writeXML(this.vCard.createResponse({

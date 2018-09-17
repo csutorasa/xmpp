@@ -19,7 +19,7 @@ export class TimeHandler extends Handler {
         return this.time.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.time.readRequest(reader);
 
         client.writeXML(this.time.createResponse({

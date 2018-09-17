@@ -12,7 +12,7 @@ export class OpenStreamHandler extends Handler {
         return (client.state === ClientState.Connecting || client.state === ClientState.Authenticated) && this.stream.isOpenStreamMessage(event);
     }
 
-    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
+    public async handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): Promise<void> {
         const request = this.stream.readOpenStreamMessage(event);
         const openStream = this.stream.createOpenStreamMessage({
             from: server.hostname,

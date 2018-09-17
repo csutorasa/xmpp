@@ -10,7 +10,7 @@ export class CloseStreamHandler extends Handler {
         return this.stream.isCloseStreamMessage(event);
     }
 
-    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
+    public async handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): Promise<void> {
         client.state = ClientState.Disconnected;
     }
 }

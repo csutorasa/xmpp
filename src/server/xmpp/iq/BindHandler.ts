@@ -17,7 +17,7 @@ export class BindHandler extends Handler {
         return this.bind.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.bind.readRequest(reader);
         client.jid.resource = request.resource ? request.resource : 'randomresource';
 
