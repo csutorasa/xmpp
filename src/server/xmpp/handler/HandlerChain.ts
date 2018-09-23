@@ -22,7 +22,7 @@ export class HandlerChain {
             const singleSupported = this.handlers.filter((h) => this.isSingleSupported(h, server, client, events[0]));
             if (singleSupported.length > 0) {
                 const event: XMLEvent = XMLEventHelper.processFirst(events);
-                singleSupported.forEach((h) => h.handleSingle(server, client, event));
+                this.handlePromises(singleSupported.map((h) => h.handleSingle(server, client, event)));
             } else {
                 const reader: XML = XMLEventHelper.getTag(events);
                 if (reader) {
@@ -31,7 +31,7 @@ export class HandlerChain {
                         XMLEventHelper.processTag(events);
                         if (iqSupported.length > 0) {
                             HandlerChain.log.info(() => 'Processed ' + reader.toReadableString());
-                            iqSupported.forEach((h) => h.handleIq(server, client, reader));
+                            this.handlePromises(iqSupported.map((h) => h.handleIq(server, client, reader)));
                         } else {
                             HandlerChain.log.warn(() => 'Unprocessable ' + reader.toReadableString());
                             client.writeXML(XML.create('iq')
@@ -49,7 +49,7 @@ export class HandlerChain {
                         XMLEventHelper.processTag(events);
                         if (supported.length > 0) {
                             HandlerChain.log.info(() => 'Processed ' + reader.toReadableString());
-                            supported.forEach((h) => h.handle(server, client, reader));
+                            this.handlePromises(supported.map((h) => h.handle(server, client, reader)));
                         } else {
                             HandlerChain.log.warn(() => 'Unprocessable ' + reader.toReadableString());
                         }
@@ -69,7 +69,7 @@ export class HandlerChain {
     }
 
     protected isIq(reader: XML): boolean {
-        return reader.getName() === 'iq' && (reader.getAttr('type') === 'set' || reader.getAttr('type') === 'get');
+        return (reader.getName() === 'iq' && (reader.getAttr('type') === 'set' || reader.getAttr('type') === 'get'));
     }
 
     protected isIqSupported(handler: Handler, server: ServerContext, client: ClientContext, reader: XML): boolean {
@@ -88,5 +88,11 @@ export class HandlerChain {
             HandlerChain.log.error(e.message || e);
             return false;
         }
+    }
+
+    protected handlePromises(promises: Array<Promise<any>>): Promise<any> {
+        return Promise.all(promises).catch((err) => {
+            HandlerChain.log.error(err);
+        });
     }
 }

@@ -4,6 +4,9 @@ node_modules
 # output
 dist/
 
+# logs
+*.log
+
 # key files
 *.crt
 *.key

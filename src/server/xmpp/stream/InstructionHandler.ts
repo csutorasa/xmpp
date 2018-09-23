@@ -8,7 +8,7 @@ export class InstructionHandler extends Handler {
         return event.type === 'instruction';
     }
 
-    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
+    public async handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): Promise<void> {
         // Ignore message
     }
 }

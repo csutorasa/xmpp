@@ -19,7 +19,7 @@ export class PingHandler extends Handler {
         return this.ping.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.ping.readRequest(reader);
 
         client.writeXML(this.ping.createResponse({

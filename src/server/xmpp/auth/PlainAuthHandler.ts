@@ -21,7 +21,7 @@ export class PlainAuthHandler extends Handler {
         return reader.getName() === 'auth' && reader.getAttr('mechanism') === 'PLAIN';
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handle(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const buf = Buffer.from(reader.getContent(), 'base64');
         let user: string;
         let pw: string;

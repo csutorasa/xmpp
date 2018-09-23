@@ -19,7 +19,7 @@ export class DiscoveryItemsHandler extends Handler {
         return this.discoveryItems.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.discoveryItems.readRequest(reader);
 
         client.writeXML(this.discoveryItems.createResponse({

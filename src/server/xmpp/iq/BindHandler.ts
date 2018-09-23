@@ -1,9 +1,11 @@
-import { Bind, IqRequestType, XML } from '../../../library';
+import { Bind, ILogger, IqRequestType, LoggerFactory, XML } from '../../../library';
 import { ClientContext } from '../context/ClientContext';
 import { ServerContext } from '../context/ServerContext';
 import { Handler } from '../handler/Handler';
+import { SessionManager } from '../manager/SessionManager';
 
 export class BindHandler extends Handler {
+    private static readonly log: ILogger = LoggerFactory.create(BindHandler);
 
     protected bind = new Bind();
 
@@ -15,7 +17,7 @@ export class BindHandler extends Handler {
         return this.bind.isRequest(reader);
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
+    public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.bind.readRequest(reader);
         client.jid.resource = request.resource ? request.resource : 'randomresource';
 
@@ -23,5 +25,7 @@ export class BindHandler extends Handler {
             id: request.id,
             jid: client.jid,
         }));
+
+        SessionManager.add(client);
     }
 }

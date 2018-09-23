@@ -20,15 +20,15 @@ export abstract class Handler {
         return false;
     }
 
-    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): void {
-        // unused if support returns false
+    public handleSingle(server: ServerContext, client: ClientContext, event: XMLEvent): Promise<any> {
+        return Promise.reject();
     }
 
-    public handleIq(server: ServerContext, client: ClientContext, reader: XML): void {
-        // unused if support returns false
+    public handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<any> {
+        return Promise.reject();
     }
 
-    public handle(server: ServerContext, client: ClientContext, reader: XML): void {
-        // unused if support returns false
+    public handle(server: ServerContext, client: ClientContext, reader: XML): Promise<any> {
+        return Promise.reject();
     }
 }

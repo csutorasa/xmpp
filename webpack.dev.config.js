@@ -24,7 +24,7 @@ compiler.watch({
             serverProcessPromise = serverProcessPromise.then(() => {
                 return new Promise((resolve, reject) => {
                     console.log('Starting server...');
-                    serverProcess = child_process.fork("dist/server.js");
+                    serverProcess = child_process.fork("dist/server.js", ['./config.json']);
                     serverProcess.on('exit', () => {
                         console.log('Server stopped');
                         serverProcess = null;
