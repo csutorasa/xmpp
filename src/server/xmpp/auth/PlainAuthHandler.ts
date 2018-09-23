@@ -1,10 +1,14 @@
 import { ILogger, LoggerFactory, Stream, XML } from '../../../library';
+import { Ldap } from '../../ldap/Ldap';
 import { ClientContext, ClientState } from '../context/ClientContext';
 import { ServerContext } from '../context/ServerContext';
 import { Handler } from '../handler/Handler';
 
 export class PlainAuthHandler extends Handler {
     private static readonly log: ILogger = LoggerFactory.create(PlainAuthHandler);
+
+    protected ldap: Ldap;
+    protected authenticated: boolean = false;
 
     public init(context: ServerContext): void {
         context.authFeatures.element(XML.create('mechanisms')
@@ -19,7 +23,6 @@ export class PlainAuthHandler extends Handler {
 
     public handle(server: ServerContext, client: ClientContext, reader: XML): void {
         const buf = Buffer.from(reader.getContent(), 'base64');
-        let authenticated: boolean = false;
         let user: string;
         let pw: string;
         if (buf.indexOf('\x00', 0) === 0) {
@@ -31,14 +34,13 @@ export class PlainAuthHandler extends Handler {
                 pw = bufPw.toString();
                 PlainAuthHandler.log.info('auth-user: ' + user);
                 PlainAuthHandler.log.info('auth-pw:' + pw);
-
-                authenticated = this.authenticate(user, pw);
+                this.authenticate(user, pw);
             }
         } else {
             PlainAuthHandler.log.error('Invalid PLAIN format');
         }
 
-        if (authenticated) {
+        if (this.authenticated) {
             client.jid.name = user;
             client.state = ClientState.Authenticated;
 
@@ -60,7 +62,27 @@ export class PlainAuthHandler extends Handler {
         }
     }
 
-    private authenticate(user: string, pw: string): boolean {
-        return pw.localeCompare('password') === 0;
+    private authenticate(user: string, pw: string): Promise<any> {
+        const trimedPw = this.trimPassword(pw);
+
+        this.ldap = new Ldap();
+        const promise = new Promise((resolve, reject) => {
+            this.ldap.connect('NB266', 389).then((res) => this.ldap.authenticate(user, trimedPw)).then((res) => {
+                if (res === true) {
+                    this.authenticated = true;
+                } else {
+                    this.authenticated = false;
+                }
+            });
+        });
+
+        return promise;
+    }
+
+    private trimPassword(pw: string): string {
+        // while (pw.charAt(0) === ' ') {
+            pw = pw.substr(1);
+        // }
+            return pw;
     }
 }
