@@ -15,7 +15,7 @@ export class XMPPServer extends AbstractServer {
 
     public constructor() {
         super();
-        this.context.hostname = 'd';
+        this.context.hostname = 'localhost';
         this.context.sessionFeatures = XML.create('stream:features');
         this.context.authFeatures = XML.create('stream:features');
         this.context.discoveryInfo = XML.create('query').xmlns('', DiscoveryInfo.DISCOVERYINFO_XMLNS);

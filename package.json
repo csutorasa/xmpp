@@ -15,10 +15,10 @@
   "typings": "index.d.ts",
   "types": "index.d.ts",
   "dependencies": {
-    "chalk": "^2.4.1",
-    "mongodb": "^3.1.4",
     "@types/ldapjs": "^1.0.3",
+    "chalk": "^2.4.1",
     "ldapjs": "^1.0.2",
+    "mongodb": "^3.1.6",
     "node-xml-stream-parser": "^1.0.7",
     "tslint": "^5.11.0",
     "xml-js": "^1.6.7"

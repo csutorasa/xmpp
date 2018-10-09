@@ -40,7 +40,7 @@ export class Ldap {
                 let isEnded = false;
 
                 if (err) {
-                    Ldap.log.error('Ooops Soemthing went wrong with the Ldap search. Error msg: ' + err);
+                    Ldap.log.error('Ooops something went wrong with the Ldap search. Error msg: ' + err);
                     if (!isEnded) {
                         reject(false);
                         isEnded = true;

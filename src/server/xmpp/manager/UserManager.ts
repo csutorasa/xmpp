@@ -44,7 +44,7 @@ export class UserManager {
     public static createDefaultUsers() {
         if (!this.users) {
             this.users = {};
-            const serverName: string = 'd';
+            const serverName: string = 'localhost';
             // System User
             const sysUser: User = this.createUser('system@' + serverName);
 
@@ -56,7 +56,7 @@ export class UserManager {
             SessionManager.add(echoContext);
 
             // Other test users
-            const a: User = this.createUser('a@' + serverName).addPartner(echoUser);
+            const a: User = this.createUser('fsatrio@' + serverName).addPartner(echoUser);
             const b: User = this.createUser('b@' + serverName).addPartner(echoUser).addPartner(a);
             const c: User = this.createUser('c@' + serverName).addPartner(echoUser).addPartner(a).addPartner(b);
         }

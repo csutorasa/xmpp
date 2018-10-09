@@ -34,11 +34,13 @@ export class PlainAuthHandler extends Handler {
                 pw = bufPw.toString();
                 PlainAuthHandler.log.info('auth-user: ' + user);
                 PlainAuthHandler.log.info('auth-pw:' + pw);
-                this.authenticate(user, pw);
+                await this.authenticate(user, pw);
             }
         } else {
             PlainAuthHandler.log.error('Invalid PLAIN format');
         }
+
+        PlainAuthHandler.log.info('123123');
 
         if (this.authenticated) {
             client.jid.name = user;
@@ -62,21 +64,23 @@ export class PlainAuthHandler extends Handler {
         }
     }
 
-    private authenticate(user: string, pw: string): Promise<any> {
+    private async authenticate(user: string, pw: string): Promise<any> {
         const trimedPw = this.trimPassword(pw);
 
         this.ldap = new Ldap();
-        const promise = new Promise((resolve, reject) => {
-            this.ldap.connect('NB266', 389).then((res) => this.ldap.authenticate(user, trimedPw)).then((res) => {
-                if (res === true) {
-                    this.authenticated = true;
-                } else {
-                    this.authenticated = false;
-                }
-            });
-        });
+        await this.ldap.connect('NB266', 389)
+            .then((res) => this.ldap.authenticate(user, trimedPw))
+                .then((res) => {
+                    PlainAuthHandler.log.info(JSON.stringify(res));
+                    if (res === true) {
+                        PlainAuthHandler.log.info(JSON.stringify(res));
+                        this.authenticated = true;
+                    } else {
+                        this.authenticated = false;
+                    }})
+            .catch((err) => {
+                PlainAuthHandler.log.error(err.message); });
 
-        return promise;
     }
 
     private trimPassword(pw: string): string {
