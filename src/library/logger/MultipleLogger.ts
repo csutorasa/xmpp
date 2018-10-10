@@ -4,7 +4,7 @@ export class MultipleLogger extends AbstractLogger {
 
     protected readonly loggers: ILogger[] = [];
 
-    public constructor(type: { new(): any }) {
+    public constructor(type: { name: string }) {
         super(type);
     }
 

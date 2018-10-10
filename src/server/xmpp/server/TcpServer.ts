@@ -71,7 +71,7 @@ export class TcpServer extends AbstractServer {
     }
 
     protected writeXML(socket: net.Socket, context: ClientContext, data: XML): Promise<any> {
-        TcpServer.log.info(() => 'Sent ' + data.toReadableString());
+        TcpServer.log.info(() => 'Sent ' + data.toReadableString() + ' to ' + context.jid.stringify());
         return this.write(socket, context, data.toXML());
     }
 

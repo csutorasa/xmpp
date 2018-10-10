@@ -24,3 +24,4 @@
 | [XEP-0199](https://xmpp.org/extensions/xep-0199.html) | XMPP Ping                | Done        |
 | [XEP-0202](https://xmpp.org/extensions/xep-0202.html) | Entity Time              | Done        |
 | [XEP-0203](https://xmpp.org/extensions/xep-0203.html) | Delayed Delivery         | To Do       |
+| [XEP-0203](https://xmpp.org/extensions/xep-0280.html) | Message Carbons          | To Do       |

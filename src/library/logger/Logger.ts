@@ -47,7 +47,7 @@ export abstract class AbstractLogger implements ILogger {
     protected readonly name: string;
     private level: LogLevel = LogLevel.Info;
 
-    public constructor(type: { new(): any }) {
+    public constructor(type: { name: string } /*{ new(): any }*/) {
         this.name = type.name;
     }
 

@@ -1,23 +1,32 @@
 import { ILogger, LoggerFactory, RosterItem } from '../../../library';
-import { JID } from '../../../library/util/jid';
+// import { JID } from '../../../library/util/jid';
+import { Subscription, SubscriptionRepository } from '../../database/SubscriptionRepository';
 
 export interface Users {
     [user: string]: User;
 }
 
 export class User {
-
    // private static readonly log: ILogger = LoggerFactory.create(User);
 
     public partners: Users = {}; // TODO: has to be persisted with subscription info
     public presence: boolean = false;
     public emailAddress: string;
-
+public RosterItem;
     public constructor(public name: string) {}
 
     public addPartner(partner: User): User {
         if (partner) {
-            this.partners[partner.name] = partner;
+            if (this.partners[partner.name] === null) {
+                this.partners[partner.name] = partner;
+                /* TODO
+                const sr: SubscriptionRepository = new SubscriptionRepository();
+                const s: Subscription = {from: this.name, to: partner.name};
+                const ss: Subscription[] =  Array();
+                ss.push(s);
+                sr.insert(ss);
+                */
+            }
         }
         return this;
     }
@@ -32,9 +41,9 @@ export class User {
                 if (user) {
                     const ri: RosterItem =  {
                         jid: uName, // JID.parse(uName),
-                        name: 'roster name',
-                        subscription: 'both',
-                        groups: ['group'],
+                        name: 'roster name', // TODO
+                        subscription: 'both', // TODO
+                        groups: ['group'], // TODO
                     };
                     if (ri) {
                         ret.push(ri);

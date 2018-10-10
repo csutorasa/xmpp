@@ -4,7 +4,7 @@ export class JID {
         const at = data.split('@');
         const name = at.length > 1 ? at.shift() : null;
         const slash = at.join('@').split('/');
-        const host = slash.length > 1 ? slash.shift() : null;
+        const host = slash.length > 0 ? slash.shift() : null;
         return new JID(host, name, slash.join('/'));
     }
     public constructor(public host: string, public name?: string, public resource?: string) {
@@ -32,8 +32,8 @@ export class JID {
     }
 
     public getBindedUser(): string {
-        if (this.hasUser() && this.hasResource()) {
-            return this.name + '@' + this.host + '/' + this.resource;
+        if (this.hasUser()) {
+            return this.name + '@' + this.host + (this.hasResource() ? '/' + this.resource : '');
         } else {
             return null;
         }

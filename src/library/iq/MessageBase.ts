@@ -1,3 +1,6 @@
+import { User } from '../../server/xmpp/manager/User';
+import { ILogger } from '../logger/Logger';
+import { LoggerFactory } from '../logger/LoggerFactory';
 import { JID } from '../util/jid';
 import { XML } from '../xml/XML';
 
@@ -9,10 +12,10 @@ export interface MessageRequest {
 }
 
 export interface MessageResponse {
-    from: string;
-    to: string;
+    from: string|JID;
+    to: string|JID;
     type: string;
-    body?: XML;
+    body?: string|XML;
 }
 
 /*
@@ -43,21 +46,40 @@ export abstract class MessageBase {
             return createMessage(from.getBindedUser(), to, type, body);
     }*/
 
-    public static createMessage(from: string, to: string, type: string, msg: string|XML): XML {
+    public static createMessage(msg: MessageResponse): XML {
+        return MessageBase.createMessageNative(msg.from, msg.to, msg.type, msg.body);
+    }
+
+    public static createMessageNative(from: string|JID|User, to: string|JID|User, type: string, msgBody?: string|XML): XML {
         let body: XML = null;
-        if (msg instanceof XML) {
-            body = msg;
+        if (msgBody instanceof XML) {
+            body = msgBody;
         } else {
-            body = XML.create('body').text(msg);
+            body = XML.create('body').text(msgBody ? msgBody : '');
         }
+        if (from instanceof User) {
+            from = from.name;
+        } else if (from instanceof JID) {
+            from = from.getUser();
+        }
+        if (to instanceof User) {
+            to = to.name;
+        } else if (to instanceof JID) {
+            to = to.getUser();
+            // to = to.getBindedUser();
+        }
+        type = 'chat'; // TODO: override for Pigdin
         const xml: XML = XML.create('message')
         .attr('from', from)
         .attr('to', to)
         .attr('type', type)
         .attr('xml:lang', 'en')
         .element( body );
+        MessageBase.log.info(JSON.stringify(xml));
         return xml;
     }
+
+    private static readonly log: ILogger = LoggerFactory.create(MessageBase);
     protected isMessage(request: XML): boolean {
         return request.getName() === 'message';
     }

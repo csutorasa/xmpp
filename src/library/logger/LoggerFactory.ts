@@ -5,7 +5,7 @@ import { ILogger, LogLevel, parseLogLevel } from './Logger';
 import { MultipleLogger } from './MultipleLogger';
 
 export class LoggerFactory {
-    public static create(type: { new(): any }): ILogger {
+    public static create(type: { name: string }): ILogger {
         const logger: MultipleLogger = new MultipleLogger(type);
         if (ConfigurationManager.getConfiguration().logging.consoleLevel) {
             const consoleLogger: ILogger = new ConsoleLogger(type);

@@ -4,7 +4,7 @@ import { AbstractLogger, LogLevel } from './Logger';
 
 export class FileLogger extends AbstractLogger {
 
-    public constructor(type: { new(): any }, protected filename: string) {
+    public constructor(type: { name: string }, protected filename: string) {
         super(type);
     }
 

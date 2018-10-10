@@ -68,6 +68,10 @@ export class UserManager {
                     this.createUser(element.name1 + '@' + serverName);
                 }); }); }).catch((err) => {UserManager.log.error(err); });
 
+            const aaa: User = this.getUser('aaa@' + serverName).addPartner(echoUser);
+            const bbb: User = this.getUser('bbb@' + serverName).addPartner(echoUser).addPartner(aaa);
+            const ccc: User = this.getUser('ccc@' + serverName).addPartner(echoUser).addPartner(aaa).addPartner(bbb);
+
             // Other test users
             // const a: User = this.createUser('fsatrio@' + serverName).addPartner(echoUser);
             // const b: User = this.createUser('b@' + serverName).addPartner(echoUser).addPartner(a);

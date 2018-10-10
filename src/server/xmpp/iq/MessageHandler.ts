@@ -1,10 +1,12 @@
 import { ILogger, IqRequestType, LoggerFactory, Roster, XML } from '../../../library';
 import { Message } from '../../../library/iq/Message';
+import { MessageResponse } from '../../../library/iq/MessageBase';
 import { JID } from '../../../library/util/jid';
 import { ClientContext } from '../context/ClientContext';
 import { ServerContext } from '../context/ServerContext';
 import { Handler } from '../handler/Handler';
 import { Router } from '../manager/Router';
+import { SessionManager } from '../manager/SessionManager';
 import { User } from '../manager/User';
 import { UserManager } from '../manager/UserManager';
 
@@ -24,12 +26,17 @@ export class MessageHandler extends Handler {
     }
 
     public async handle(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
+        MessageHandler.log.info('JID: ' + JSON.stringify(client.jid));
         const request = this.message.readRequest(reader);
+        // SessionManager.g
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
         // MessageHandler.log.info(me ? 'me:' + me.name : 'me is undefined');
-        MessageHandler.log.info('request.type: ' + request.type ? request.type : 'null');
+        MessageHandler.log.info('request.id: ' + request.id);
+        MessageHandler.log.info('request.from: ' + me.name);
         MessageHandler.log.info('request.to: ' + request.to);
-        /*let t: MessageResponseType = 'unavailable';
+        MessageHandler.log.info('request.type: ' + request.type ? request.type : 'null');
+        MessageHandler.log.info('request.body: ' + (request.body ? JSON.stringify(request.body.getContent()) : ''));
+        /*
 
         // if (request.type) {
         switch (request.type) {
@@ -50,12 +57,11 @@ export class MessageHandler extends Handler {
             }
         // }
         */
-        Router.sendMessageToUser(client.jid, JID.parse(request.to).getUser(), request.type, request.body);
-        /*client.writeXML(this.message.createResponse({
-            from: request.to,
-            to: me.name,
-            type:  request.type,
-            body: request.body,
-        }));*/
+        const toJID: JID = JID.parse(request.to);
+        const to: string = toJID.getUser();
+        MessageHandler.log.info('toJID: ' + JSON.stringify(toJID));
+        const mr: MessageResponse = { from: client.jid, to: JID.parse(request.to).getUser(), type: request.type, body: request.body };
+        Router.sendMessageToUser(mr, null, client); // Forward it to the 'to'
+        // Router.sendMessageToUser(mr, client.jid, client); // Echo it to itself, except the same client, called Carbons, see: xep-0280
     }
 }

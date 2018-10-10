@@ -42,8 +42,9 @@ export class PresenceHandler extends Handler {
                         // break;
                         // this.presence.sendPresenceToClient('a@d', client);
                         // this.presence.sendPresenceToClient(me.name, request.to, client); // TODO
-                        this.presence.sendPresenceToClient('fsatrio@localhost', me.name, client); // TODO
-                        this.presence.sendPresenceToClient('c@localhost', me.name, client); // TODO
+                        this.presence.sendPresenceToClient('aaa@localhost', me.name, client); // TODO
+                        this.presence.sendPresenceToClient('bbb@localhost', me.name, client); // TODO
+                        this.presence.sendPresenceToClient('ccc@localhost', me.name, client); // TODO
                         return;
                 default:
                     t = 'error';
