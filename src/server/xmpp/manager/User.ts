@@ -11,6 +11,7 @@ export class User {
 
     public partners: Users = {}; // TODO: has to be persisted with subscription info
     public presence: boolean = false;
+    public emailAddress: string;
 
     public constructor(public name: string) {}
 

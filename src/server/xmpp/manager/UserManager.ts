@@ -1,5 +1,7 @@
 import { ILogger, LoggerFactory, Roster, RosterItem } from '../../../library';
 import { JID } from '../../../library/util/jid';
+import { UserRepository } from '../../database/UserRepository';
+import { Ldap } from '../../ldap/Ldap';
 import { ClientContext } from '../context/ClientContext';
 import { XMPPServer } from '../server/XMPPServer';
 import { EchoService } from '../service/EchoService';
@@ -41,7 +43,7 @@ export class UserManager {
         return this.getUserFromJID(client.jid);
     }
 
-    public static createDefaultUsers() {
+    public static async createDefaultUsers() {
         if (!this.users) {
             this.users = {};
             const serverName: string = 'localhost';
@@ -55,10 +57,21 @@ export class UserManager {
             const echoContext: ClientContext = EchoService.getClientContext(echoServiceJID);
             SessionManager.add(echoContext);
 
+            // TODO sync should be called on serverstart and time to time not on this event
+            const ldap = new Ldap();
+            await ldap.sync();
+
+            const ur = new UserRepository();
+            let users: User[];
+            await ur.queryAll().then( async (res) => { await res.toArray().then((data) => {
+                data.forEach((element) => {
+                    this.createUser(element.name1 + '@' + serverName);
+                }); }); }).catch((err) => {UserManager.log.error(err); });
+
             // Other test users
-            const a: User = this.createUser('fsatrio@' + serverName).addPartner(echoUser);
-            const b: User = this.createUser('b@' + serverName).addPartner(echoUser).addPartner(a);
-            const c: User = this.createUser('c@' + serverName).addPartner(echoUser).addPartner(a).addPartner(b);
+            // const a: User = this.createUser('fsatrio@' + serverName).addPartner(echoUser);
+            // const b: User = this.createUser('b@' + serverName).addPartner(echoUser).addPartner(a);
+            // const c: User = this.createUser('c@' + serverName).addPartner(echoUser).addPartner(a).addPartner(b);
         }
     }
 

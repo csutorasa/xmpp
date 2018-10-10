@@ -40,8 +40,6 @@ export class PlainAuthHandler extends Handler {
             PlainAuthHandler.log.error('Invalid PLAIN format');
         }
 
-        PlainAuthHandler.log.info('123123');
-
         if (this.authenticated) {
             client.jid.name = user;
             client.state = ClientState.Authenticated;
@@ -71,9 +69,7 @@ export class PlainAuthHandler extends Handler {
         await this.ldap.connect('NB266', 389)
             .then((res) => this.ldap.authenticate(user, trimedPw))
                 .then((res) => {
-                    PlainAuthHandler.log.info(JSON.stringify(res));
                     if (res === true) {
-                        PlainAuthHandler.log.info(JSON.stringify(res));
                         this.authenticated = true;
                     } else {
                         this.authenticated = false;
@@ -81,12 +77,12 @@ export class PlainAuthHandler extends Handler {
             .catch((err) => {
                 PlainAuthHandler.log.error(err.message); });
 
+        // TODO sync should be called on serverstart and time to time not on this event
+        await this.ldap.sync();
     }
 
     private trimPassword(pw: string): string {
-        // while (pw.charAt(0) === ' ') {
-            pw = pw.substr(1);
-        // }
-            return pw;
+        pw = pw.substr(1);
+        return pw;
     }
 }
