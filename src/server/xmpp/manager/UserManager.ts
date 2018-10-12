@@ -10,23 +10,6 @@ import { User, Users } from './User';
 
 export class UserManager {
 
-    public static getUser(name: string): User {
-        this.createDefaultUsers(); // TODO Move this into some init function
-        const user: User = this.users[name];
-        return user;
-    }
-
-    public static getUserFromJID(jid: JID): User {
-        if (!jid) {
-            return null;
-        }
-        const name = jid.getUser();
-        if (!name) {
-            return null;
-        }
-        return this.getUser (name);
-    }
-
     public static createUser(userName: string): User {
         let userX: User = this.getUser(userName);
         if (!userX) {
@@ -36,15 +19,28 @@ export class UserManager {
         return userX;
     }
 
+    public static getUser(name: string): User {
+        // this.createDefaultUsers(); // TODO Move this into some init function
+        const user: User = this.users[name];
+        return user;
+    }
+
     public static getCurrentUser(client: ClientContext): User {
         if (!client) {
+            UserManager.log.warn('client is undefined');
             return null;
         }
-        return this.getUserFromJID(client.jid);
+        const u: User = this.getUserFromJID(client.jid);
+        if (!u) {
+            UserManager.log.warn('user is undefined for client: ' + client.jid.stringify());
+            UserManager.log.info(JSON.stringify(this.users));
+        }
+        return u;
     }
 
     public static async createDefaultUsers() {
-        if (!this.users) {
+        if (!UserManager.tempDefaultUsersCreated) {
+            UserManager.tempDefaultUsersCreated = true;
             this.users = {};
             const serverName: string = 'localhost';
             // System User
@@ -62,7 +58,7 @@ export class UserManager {
             await ldap.sync();
 
             const ur = new UserRepository();
-            let users: User[];
+            // let users: User[];
             await ur.queryAll().then( async (res) => { await res.toArray().then((data) => {
                 data.forEach((element) => {
                     this.createUser(element.name1 + '@' + serverName);
@@ -70,12 +66,10 @@ export class UserManager {
 
             const aaa: User = this.getUser('aaa@' + serverName).addPartner(echoUser);
             const bbb: User = this.getUser('bbb@' + serverName).addPartner(echoUser).addPartner(aaa);
-            const ccc: User = this.getUser('ccc@' + serverName).addPartner(echoUser).addPartner(aaa).addPartner(bbb);
-
-            // Other test users
-            // const a: User = this.createUser('fsatrio@' + serverName).addPartner(echoUser);
-            // const b: User = this.createUser('b@' + serverName).addPartner(echoUser).addPartner(a);
-            // const c: User = this.createUser('c@' + serverName).addPartner(echoUser).addPartner(a).addPartner(b);
+            const loxon: User = this.getUser('loxon@' + serverName);
+            const hci: User = this.getUser('hci@' + serverName).addPartner(loxon);
+            loxon.addPartner(hci);
+            UserManager.log.info(JSON.stringify(this.users));
         }
     }
 
@@ -84,4 +78,15 @@ export class UserManager {
     protected static tempDefaultUsersCreated: boolean = false;
 
     private static readonly log: ILogger = LoggerFactory.create(UserManager);
+
+    private static getUserFromJID(jid: JID): User {
+        if (!jid) {
+            return null;
+        }
+        const name = jid.getUser();
+        if (!name) {
+            return null;
+        }
+        return this.getUser (name);
+    }
 }

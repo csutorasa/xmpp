@@ -30,9 +30,12 @@ export class MessageHandler extends Handler {
         const request = this.message.readRequest(reader);
         // SessionManager.g
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
-        // MessageHandler.log.info(me ? 'me:' + me.name : 'me is undefined');
         MessageHandler.log.info('request.id: ' + request.id);
-        MessageHandler.log.info('request.from: ' + me.name);
+        if (me) {
+            MessageHandler.log.info(me.name);
+        } else {
+            MessageHandler.log.warn('me is undefined for client: ' + client.jid.stringify());
+        }
         MessageHandler.log.info('request.to: ' + request.to);
         MessageHandler.log.info('request.type: ' + request.type ? request.type : 'null');
         MessageHandler.log.info('request.body: ' + (request.body ? JSON.stringify(request.body.getContent()) : ''));

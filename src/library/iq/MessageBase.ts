@@ -52,6 +52,7 @@ export abstract class MessageBase {
 
     public static createMessageNative(from: string|JID|User, to: string|JID|User, type: string, msgBody?: string|XML): XML {
         let body: XML = null;
+        let resource: string = '';
         if (msgBody instanceof XML) {
             body = msgBody;
         } else {
@@ -65,10 +66,12 @@ export abstract class MessageBase {
         if (to instanceof User) {
             to = to.name;
         } else if (to instanceof JID) {
+            resource = to.resource;
             to = to.getUser();
             // to = to.getBindedUser();
         }
-        type = 'chat'; // TODO: override for Pigdin
+        type = resource == 'Thunderbird' ? 'groupchat' : 'chat'; // TODO: override for Pigdin
+        MessageBase.log.info('createMessageNative: resource: ' + resource);
         const xml: XML = XML.create('message')
         .attr('from', from)
         .attr('to', to)

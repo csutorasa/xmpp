@@ -11,6 +11,7 @@ import { DiscoveryInfoHandler } from './xmpp/iq/xep-0030/DiscoveryInfoHandler';
 import { DiscoveryItemsHandler } from './xmpp/iq/xep-0030/DiscoveryItemsHandler';
 import { PingHandler } from './xmpp/iq/xep-0199/PingHandler';
 import { TimeHandler } from './xmpp/iq/xep-0202/TimeHandler';
+import { UserManager } from './xmpp/manager/UserManager';
 import { TcpServer } from './xmpp/server/TcpServer';
 import { XMPPServer } from './xmpp/server/XMPPServer';
 import { CloseStreamHandler } from './xmpp/stream/CloseStreamHandler';
@@ -39,4 +40,4 @@ server
     .addHandler(new TimeHandler())
     .addHandler(new PingHandler());
 
-server.start();
+UserManager.createDefaultUsers().then((res) => {server.start(); });

@@ -23,14 +23,18 @@ export class RosterHandler extends Handler {
     public async handleIq(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.roster.readRequest(reader);
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
-        RosterHandler.log.info(me ? 'me:' + me.name : 'me is undefined');
+        if (me) {
+            RosterHandler.log.info(me.name);
+        } else {
+            RosterHandler.log.warn('me is undefined for client: ' + client.jid.stringify());
+        }
         if ('set'.localeCompare(request.type) === 0) {
             const partner: User = UserManager.getUser(request.jid);
             RosterHandler.log.info('jid(' + request.jid + '): ' + (partner ? 'adding partner:' + partner.name : 'partner is undefined'));
-            if (partner) {
+            if (me && partner) {
                 me.addPartner(partner);
             } else {
-                // TODO: error handling
+                RosterHandler.log.warn('unable to add Roster: me: ' + JSON.stringify(me) + ', partner: ' + JSON.stringify(partner));
             }
         }
         client.writeXML(this.roster.createResponse({

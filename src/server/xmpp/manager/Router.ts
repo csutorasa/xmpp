@@ -17,8 +17,10 @@ export class Router {
             Router.log.warn('sendMessageToClient: client is null' + JSON.stringify(from));
             return; // TODO
         }
-        // Target: client's JID is the default, but sometimes the channel (client) and the target (to) in the message is not the same (e.g. EchoService response or self echo)
-        const to: string = (toOverride instanceof JID ? toOverride.getUser() : toOverride) || (client.jid ? client.jid.getUser() : '');
+        // Target: client's JID is the default, but sometimes the channel (client) and the target (to) in the message is not the same
+        // (e.g. EchoService response or self echo)
+        // const to: string = (toOverride instanceof JID ? toOverride.getUser() : toOverride) || (client.jid ? client.jid.getUser() : '');
+        const to: JID|string = toOverride ? toOverride : (client ? client.jid : '');
         Router.log.info('sendMessageToClient: from: ' + JSON.stringify(from) + ' to: ' + JSON.stringify(to) + ' via: ' + (client.jid.stringify()));
         client.writeXML(MessageBase.createMessageNative(from, to , type,  msg));
     }
@@ -53,7 +55,8 @@ export class Router {
 
     /** Distributes messages to all clients of the specified user */
     public static sendMessageToUser(msg: MessageResponse, toOverride?: string|JID, exception?: ClientContext) {
-        Router.log.info('sendMessageToUser: msg:' + JSON.stringify(msg) + ', toOverride: ' + JSON.stringify(toOverride) + ', exception: ' + JSON.stringify(exception));
+        Router.log.info('sendMessageToUser: msg:' + JSON.stringify(msg) + ', toOverride: ' + JSON.stringify(toOverride) +
+            ', exception: ' + JSON.stringify(exception));
         const to2: string|JID = toOverride ? toOverride : msg.to;
         const to: string = to2 instanceof JID ? to2.getUser() : to2;
         const type: string = msg.type;

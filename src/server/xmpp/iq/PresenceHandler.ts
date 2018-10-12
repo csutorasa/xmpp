@@ -26,7 +26,12 @@ export class PresenceHandler extends Handler {
     public async handle(server: ServerContext, client: ClientContext, reader: XML): Promise<void> {
         const request = this.presence.readRequest(reader);
         const me: User = UserManager.getCurrentUser(client); // TODO have to be changed to "SessionManager.getCurrentUser(client);"" to force authentication
-        // PresenceHandler.log.info(me ? 'me:' + me.name : 'me is undefined');
+        const meName: string = me ? me.name : client.jid.stringify();
+        if (me) {
+            PresenceHandler.log.info(me.name);
+        } else {
+            PresenceHandler.log.warn('me is undefined for client: ' + client.jid.stringify());
+        }
         PresenceHandler.log.info('request.type' + request.type ? request.type : 'null');
         let t: PresenceResponseType = 'unavailable';
         // if (request.type) {
@@ -42,19 +47,22 @@ export class PresenceHandler extends Handler {
                         // break;
                         // this.presence.sendPresenceToClient('a@d', client);
                         // this.presence.sendPresenceToClient(me.name, request.to, client); // TODO
-                        this.presence.sendPresenceToClient('aaa@localhost', me.name, client); // TODO
-                        this.presence.sendPresenceToClient('bbb@localhost', me.name, client); // TODO
-                        this.presence.sendPresenceToClient('ccc@localhost', me.name, client); // TODO
+                        t = 'subscribed';
+                        this.presence.sendPresenceToClient('aaa@localhost', meName, client, t); // TODO
+                        this.presence.sendPresenceToClient('bbb@localhost', meName, client, t); // TODO
+                        this.presence.sendPresenceToClient('loxon@localhost', meName, client, t); // TODO
+                        this.presence.sendPresenceToClient('hci@localhost', meName, client, t); // TODO
                         return;
                 default:
                     t = 'error';
                     break;
             }
         // }
-        client.writeXML(this.presence.createResponse({
-            from: me.name,
+        this.presence.sendPresenceToClient(meName, request.to, client, t);
+        /*client.writeXML(this.presence.createResponse({
+            from: meName,
             to: request.to,
             type:  t,
-        }));
+        }));*/
     }
 }
